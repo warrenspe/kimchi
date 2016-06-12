@@ -1,0 +1,6 @@
+standardize docstrings:
+    input: abc -
+
+Make sure all the header files are imported everywhere
+
+make sure all readbuffers check for NULL
