@@ -1,6 +1,8 @@
 standardize docstrings:
     input: abc -
 
-Make sure all the header files are imported everywhere
-
 make sure all readbuffers check for NULL
+
+signed int/long type
+
+long overflow checking - either done as string in C, or in python

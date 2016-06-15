@@ -35,10 +35,8 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
     long long bodySize,
               headerSize;
 
-    type = getType(object);
-
-    if (type == 0) {
-        return 1; // TODO set error
+    if (!(type = getType(object))) {
+        return 1;
     }
 
     switch (type) {
@@ -66,6 +64,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         default:
+            PyErr_SetString(PyExc_TypeError, "Cannot serialize object; unserializable type.");
             return 1;
     }
 
@@ -99,7 +98,9 @@ PyObject *deserialize(UserBuffer *buf) {
     unsigned char type; // Type of object being deserialized
     long long size;
 
-    parseHeaders(buf, &type, &size);
+    if (parseHeaders(buf, &type, &size)) {
+        return NULL;
+    }
 
     switch (type) {
         case INT_TYPE:
@@ -118,5 +119,6 @@ PyObject *deserialize(UserBuffer *buf) {
             break;
     }
 
+    PyErr_SetString(PyExc_TypeError, "Cannot deserialize object; unrecognized type.");
     return NULL;
 }

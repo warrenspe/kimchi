@@ -76,7 +76,11 @@ int serializeNumeric(PyObject *numeric, char **buffer, long long *size) {
 
     *size = _numBytesToSerialize(toSerialize);
 
-    *buffer = malloc(*size);
+    if ((*buffer = malloc(*size)) == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for serialization");
+        return 1;
+    }
+
     memset((void *) *buffer, '\0', *size);
     _writeBytesToBuffer(toSerialize, *buffer, *size);
 
@@ -95,16 +99,14 @@ PyObject *deserializeNumeric(UserBuffer *buf, unsigned char type, long long size
 
     unsigned long long val = 0;
     unsigned int shift = 0;
-    unsigned char *byte;
+    unsigned char byte;
 
     for (long long i = 0; i < size; i++) {
-        byte = (unsigned char *) readBuffer(buf, 1);
-
-        if (byte == NULL) {
-            return NULL; //TODO error?
+        if (readBuffer(buf, &byte, 1)) {
+            return NULL;
         }
 
-        val |= (unsigned long long) (*byte) << shift;
+        val |= (unsigned long long) byte << shift;
 
         shift += 8;
     }

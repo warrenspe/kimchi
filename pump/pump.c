@@ -33,20 +33,16 @@ PyObject *deflate(PyObject *self, PyObject *args) {
     char *outputBuffer;
 
     if (!PyArg_ParseTuple(args, "O", &obj)) {
-        return NULL; // PyArg Parse will have set the appropriate errors for us
-    }
-
-    if (serialize(obj, &outputBuffer, &size)) {
-        return NULL; // TODO set error
-    }
-
-    if (outputBuffer == NULL) {
-        PyErr_BadArgument(); // TODO correct error?
         return NULL;
     }
 
-    obj = PyString_FromStringAndSize(outputBuffer, (Py_ssize_t) size); // TODO test free'ing the string before we return - trace dis
+    if (serialize(obj, &outputBuffer, &size)) {
+        return NULL;
+    }
+
+    obj = PyString_FromStringAndSize(outputBuffer, (Py_ssize_t) size);
     Py_INCREF(obj);
+    free(outputBuffer);
 
     return obj;
 }
@@ -66,20 +62,19 @@ PyObject *inflate(PyObject *self, PyObject *args) {
     UserBuffer *buf;
 
     if (!PyArg_ParseTuple(args, "s#", &serializedBuffer, &size)) {
-        return NULL; // PyArg Parse will have set the appropriate errors for us
+        return NULL;
     }
 
-    buf = initBuffer(serializedBuffer, (long long) size);
+    if ((buf = initBuffer(serializedBuffer, (long long) size)) == NULL) {
+        return NULL;
+    }
 
     obj = deserialize(buf);
-
     free(buf);
 
-    if (obj == NULL) {
-        return NULL; // TODO set error
+    if (obj != NULL) {
+        Py_INCREF(obj);
     }
-
-    Py_INCREF(obj);
 
     return obj;
 }

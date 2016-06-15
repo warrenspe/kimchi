@@ -32,7 +32,8 @@ UserBuffer *initBuffer(char *buffer, long long bytesRemaining) {
     UserBuffer *buf = malloc(sizeof(UserBuffer));
 
     if (buf == NULL) {
-        return NULL; // TODO error
+        PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for UserBuffer");
+        return NULL;
     }
 
     buf->buffer = buffer;
@@ -41,24 +42,28 @@ UserBuffer *initBuffer(char *buffer, long long bytesRemaining) {
     return buf;
 }
 
-char *readBuffer(UserBuffer *buf, long long bytesToRead) {
+int readBuffer(UserBuffer *buf, unsigned char *out, long long bytesToRead) {
 /* Reads from a UserBuffer.  Ensures that we are not reading past the end of the buffer.
  *
  * Inputs: buf - The UserBuffer to read from.
+ *         out - A char pointer to a string with sufficient memory (bytesToRead) to write to.
  *         bytesToRead - The number of bytes to read from `buf`.
  *
- * Outputs: A char pointer to the data to read, which `bytesToRead` bytes can be safely read from.
+ * Outputs: 0 if successful.  > 0 otherwise.
  */
 
-    char *toReturn;
+    char *toWrite;
 
     if (buf->bytesRemaining < bytesToRead) {
-        return NULL; // TODO error
+        PyErr_SetString(PyExc_OverflowError, "Attempted to read past the end of UserBuffer");
+        return 1;
     }
 
-    toReturn = buf->buffer;
+    toWrite = buf->buffer;
 
     buf->buffer += bytesToRead;
 
-    return toReturn;
+    memcpy(out, toWrite, bytesToRead);
+
+    return 0;
 }

@@ -83,6 +83,7 @@ int constructHeaders(char **out, long long *headerLength, Py_ssize_t size, unsig
     long long sizeBytes = _determineSizeBytes(size);
 
     if (!sizeBytes) {
+        PyErr_SetString(PyExc_OverflowError, "Size field overflow.");
         return 1;
     }
 
@@ -92,6 +93,7 @@ int constructHeaders(char **out, long long *headerLength, Py_ssize_t size, unsig
     *out = malloc(*headerLength);
 
     if (*out == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for parsed headers");
         return 1;
     }
 
@@ -119,11 +121,15 @@ int parseHeaders(UserBuffer *buffer, unsigned char *type, long long *size) {
     unsigned char sizeByte;
 
     // Get the type; which is the first character of the headers
-    *type = *readBuffer(buffer, 1);
+    if (readBuffer(buffer, type, 1)) {
+        return 1;
+    }
 
     // Get the size of the serialized body
     for (int i = 0; i < 10; i++) {
-        sizeByte = *readBuffer(buffer, 1);
+        if (readBuffer(buffer, &sizeByte, 1)) {
+            return 1;
+        }
 
         *size += (sizeByte & 127) << shift;
 
@@ -138,7 +144,8 @@ int parseHeaders(UserBuffer *buffer, unsigned char *type, long long *size) {
     // Check if we exited the loop due to maximum number of bytes, or due to a last-byte-in-size flag.
     // If it's the prior, raise an exception. As we expect to see a last-byte-in-size flag.
     if (!(sizeByte & 128)) {
-        return 1; // TODO exception
+        PyErr_SetString(PyExc_ValueError, "Size header corrupted");
+        return 1;
     }
 
     return 0;

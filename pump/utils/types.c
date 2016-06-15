@@ -51,5 +51,6 @@ unsigned char getType(PyObject *obj) {
 
     }
 
+    PyErr_SetString(PyExc_TypeError, "Unknown object type");
     return 0;
 }
