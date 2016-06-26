@@ -1,13 +1,26 @@
-import sys
 import pump
+import pickle
 
-#n = int(sys.argv[1])
-n = -350
+OBJ = u'\u2207'
 
-print "Testing: %d" % n
+def main():
+    obj = OBJ
 
-q = pump.deflate(n)
+    print "Testing: %s" % obj
 
-print repr(q)
+    print "pump test:"
+    serialized = pump.deflate(obj)
+    print "Serialized: %r" % serialized
+    print "Length: %d" % len(serialized)
+    deserialized = pump.inflate(serialized)
+    print "Deserialized: %r" % deserialized
 
-print repr(pump.inflate(q))
+    print "pickle test:"
+    serialized = pickle.dumps(obj)
+    print "Serialized: %r" % serialized
+    print "Length: %d" % len(serialized)
+    deserialized = pickle.loads(serialized)
+    print "Deserialized: %r" % deserialized
+
+if __name__ == '__main__':
+    main()

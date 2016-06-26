@@ -6,3 +6,7 @@ make sure all readbuffers check for NULL
 signed int/long type
 
 long overflow checking - either done as string in C, or in python
+
+check serializing wonky unicode chars; if it breaks use latin-1 encoding
+
+optional hash validation

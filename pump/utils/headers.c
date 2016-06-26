@@ -68,7 +68,7 @@ static void _writeHeaders(char *out, Py_ssize_t size, int sizeBytes, unsigned ch
 }
 
 
-int constructHeaders(char **out, long long *headerLength, Py_ssize_t size, unsigned char type) {
+int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t size, unsigned char type) {
 /* Function which initializes and populates a buffer with headers for a serialized object.
  *
  * Inputs: out: A pointer to a string to initialize and populate with our headers.
@@ -106,7 +106,7 @@ int constructHeaders(char **out, long long *headerLength, Py_ssize_t size, unsig
 }
 
 // Header parsing functions
-int parseHeaders(UserBuffer *buffer, unsigned char *type, long long *size) {
+int parseHeaders(UserBuffer *buffer, unsigned char *type, unsigned long long *size) {
 /* Function which parses headers out of a UserBuffer
  *
  * Inputs: buffer - A UserBuffer struct to parse headers out of.

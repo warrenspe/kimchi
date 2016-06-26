@@ -32,8 +32,8 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
     char *body,
          *headers;
     unsigned char type;
-    long long bodySize,
-              headerSize;
+    unsigned long long bodySize,
+                       headerSize;
 
     if (!(type = getType(object))) {
         return 1;
@@ -48,7 +48,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
 
         case STRING_TYPE:
         case UNICODE_TYPE:
-            if (1)
+            if (serializeString(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -96,7 +96,7 @@ PyObject *deserialize(UserBuffer *buf) {
  */
 
     unsigned char type; // Type of object being deserialized
-    long long size;
+    unsigned long long size;
 
     if (parseHeaders(buf, &type, &size)) {
         return NULL;
@@ -109,7 +109,7 @@ PyObject *deserialize(UserBuffer *buf) {
 
         case STRING_TYPE:
         case UNICODE_TYPE:
-            break;
+            return deserializeString(buf, type, size);
 
         case LIST_TYPE:
         case TUPLE_TYPE:

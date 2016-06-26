@@ -43,6 +43,7 @@
 
     // Serializer Includes
     #include "serializers/numeric.c"
+    #include "serializers/string.c"
 
     // Main C API Include
     #include "headers/serialize.h"

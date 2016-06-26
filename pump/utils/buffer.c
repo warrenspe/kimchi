@@ -42,7 +42,7 @@ UserBuffer *initBuffer(char *buffer, long long bytesRemaining) {
     return buf;
 }
 
-int readBuffer(UserBuffer *buf, unsigned char *out, long long bytesToRead) {
+int readBuffer(UserBuffer *buf, unsigned char *out, unsigned long long bytesToRead) {
 /* Reads from a UserBuffer.  Ensures that we are not reading past the end of the buffer.
  *
  * Inputs: buf - The UserBuffer to read from.

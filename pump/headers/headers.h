@@ -21,8 +21,8 @@
     // Function Prototypes
     static long long _determineSizeBytes(Py_ssize_t size);
     static void _writeHeaders(char *out, Py_ssize_t size, int sizeBytes, unsigned char type);
-    int constructHeaders(char **out, long long *headerLength, Py_ssize_t size, unsigned char type);
-    int parseHeaders(UserBuffer *buffer, unsigned char *type, long long *size);
+    int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t size, unsigned char type);
+    int parseHeaders(UserBuffer *buffer, unsigned char *type, unsigned long long *size);
 
     // Includes
     #include "utils/headers.c"

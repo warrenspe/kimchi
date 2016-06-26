@@ -19,13 +19,13 @@
 #include "headers/pump.h"
 
 // Function Prototypes
-static long long _numBytesToSerialize(unsigned long long toSerialize);
-static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, long long size);
-int serializeNumeric(PyObject *numeric, char **buffer, long long *size);
-PyObject *deserializeNumeric(UserBuffer *buf, unsigned char type, long long size);
+static unsigned long long _numBytesToSerialize(unsigned long long toSerialize);
+static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, unsigned long long size);
+int serializeNumeric(PyObject *numeric, char **buffer, unsigned long long *size);
+PyObject *deserializeNumeric(UserBuffer *buf, unsigned char type, unsigned long long size);
 
 
-static long long _numBytesToSerialize(unsigned long long toSerialize) {
+static unsigned long long _numBytesToSerialize(unsigned long long toSerialize) {
 /* Function which calculates the number of bytes required to serialize this value.
  *
  * Inputs: toSerialize: The value we will be determining the size of the serialization of.
@@ -43,7 +43,7 @@ static long long _numBytesToSerialize(unsigned long long toSerialize) {
     return counter;
 }
 
-static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, long long size) {
+static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, unsigned long long size) {
 /* Function which writes `size` bytes to `buffer`, from `toSerialize`.
  *
  * Inputs: toSerialize: The value we're serializing to buffer.
@@ -58,7 +58,7 @@ static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, lo
 }
 
 
-int serializeNumeric(PyObject *numeric, char **buffer, long long *size) {
+int serializeNumeric(PyObject *numeric, char **buffer, unsigned long long *size) {
 /* Function which serializes a Python INT or LONG into a string.
  *
  * Inputs: numeric: The PyInt or PyLong to serialize.
@@ -87,7 +87,7 @@ int serializeNumeric(PyObject *numeric, char **buffer, long long *size) {
     return 0;
 }
 
-PyObject *deserializeNumeric(UserBuffer *buf, unsigned char type, long long size) {
+PyObject *deserializeNumeric(UserBuffer *buf, unsigned char type, unsigned long long size) {
 /* Function which deserializes a string into a Python INT or Long.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a PyInt / PyLong.
@@ -101,7 +101,7 @@ PyObject *deserializeNumeric(UserBuffer *buf, unsigned char type, long long size
     unsigned int shift = 0;
     unsigned char byte;
 
-    for (long long i = 0; i < size; i++) {
+    for (unsigned long long i = 0; i < size; i++) {
         if (readBuffer(buf, &byte, 1)) {
             return NULL;
         }
