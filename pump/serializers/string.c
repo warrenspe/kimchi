@@ -68,7 +68,9 @@ PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long l
         return NULL;
     }
 
-    readBuffer(buf, bytes, size);
+    if (readBuffer(buf, bytes, size)) {
+        return NULL;
+    }
 
 
     if (type == UNICODE_TYPE) {

@@ -41,8 +41,12 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
 
     switch (type) {
         case INT_TYPE:
+            if (serializeInt(object, &body, &bodySize))
+                return 1;
+            break;
+
         case LONG_TYPE:
-            if (serializeNumeric(object, &body, &bodySize))
+            if (serializeLong(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -54,7 +58,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
 
         case LIST_TYPE:
         case TUPLE_TYPE:
-            if (1)
+            if (serializeSequence(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -104,8 +108,10 @@ PyObject *deserialize(UserBuffer *buf) {
 
     switch (type) {
         case INT_TYPE:
+            return deserializeInt(buf, type, size);
+
         case LONG_TYPE:
-            return deserializeNumeric(buf, type, size);
+            return deserializeLong(buf, type, size);
 
         case STRING_TYPE:
         case UNICODE_TYPE:

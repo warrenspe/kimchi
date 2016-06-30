@@ -16,13 +16,19 @@
  */
 
 #ifndef __SERIALIZE_H
-#define __SERIALIZE_H 1
 
     // Function Prototypes
     int serialize(PyObject *object, char **out, Py_ssize_t *outSize);
     PyObject *deserialize(UserBuffer *buf);
 
     // Includes
-    #include "utils/serialize.c"
+
+    // The first time we are included, we just want the function definitions.
+    // This allows for serializers to use our serialize/deserialize functions.
+    // The next time we are included include the definitions for these functions
+    #ifndef __SERIALIZE_HEADERS_ONLY
+        #define __SERIALIZE_H 1
+        #include "utils/serialize.c"
+    #endif
 
 #endif

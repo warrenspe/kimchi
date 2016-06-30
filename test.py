@@ -1,7 +1,11 @@
 import pump
 import pickle
 
-OBJ = u'\u2207'
+#OBJ = u'\u2207'
+#OBJ = [1]
+OBJ = 123123123123123123123L
+#OBJ = 123985712935791827359081732905712983571239857129357918273590817329057129835712398571293579182735908173290571298357123985712935791827359081732905712983571239857129357918273590817329057129835712398571293579182735908173290571298357
+OBJ = 1
 
 def main():
     obj = OBJ
@@ -14,6 +18,9 @@ def main():
     print "Length: %d" % len(serialized)
     deserialized = pump.inflate(serialized)
     print "Deserialized: %r" % deserialized
+    print "Equal: %s" % (OBJ == deserialized)
+
+    print '\n'
 
     print "pickle test:"
     serialized = pickle.dumps(obj)
@@ -21,6 +28,7 @@ def main():
     print "Length: %d" % len(serialized)
     deserialized = pickle.loads(serialized)
     print "Deserialized: %r" % deserialized
+    print "Equal: %s" % (OBJ == deserialized)
 
 if __name__ == '__main__':
     main()

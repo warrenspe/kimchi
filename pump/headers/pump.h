@@ -40,10 +40,16 @@
     #include "headers/buffer.h"
     #include "headers/headers.h"
     #include "headers/types.h"
+    // Include the definition of serialize and deserialize for use in serializers
+    #define __SERIALIZE_HEADERS_ONLY 1
+    #include "headers/serialize.h"
+    #undef __SERIALIZE_HEADERS_ONLY
 
     // Serializer Includes
-    #include "serializers/numeric.c"
+    #include "serializers/int.c"
+    #include "serializers/long.c"
     #include "serializers/string.c"
+    #include "serializers/sequence.c"
 
     // Main C API Include
     #include "headers/serialize.h"

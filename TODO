@@ -7,6 +7,8 @@ signed int/long type
 
 long overflow checking - either done as string in C, or in python
 
-check serializing wonky unicode chars; if it breaks use latin-1 encoding
+check serializing wonky unicode chars; alternately, in python require encoding, default to utf8
 
 optional hash validation
+
+alternatively, if all else fails for uni and long, use repr and a new type (for uni)
