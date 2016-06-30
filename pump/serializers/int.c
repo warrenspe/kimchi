@@ -21,7 +21,7 @@
 // Function Prototypes
 static unsigned long long _numBytesToSerialize(unsigned long long toSerialize);
 static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, unsigned long long size);
-int serializeInt(PyObject *integer, char **buffer, unsigned long long *size);
+int serializeInt(PyObject *integer, unsigned char type, char **buffer, unsigned long long *size);
 PyObject *deserializeInt(UserBuffer *buf, unsigned char type, unsigned long long size);
 
 
@@ -58,10 +58,11 @@ static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, un
 }
 
 
-int serializeInt(PyObject *integer, char **buffer, unsigned long long *size) {
+int serializeInt(PyObject *integer, unsigned char type, char **buffer, unsigned long long *size) {
 /* Function which serializes a Python int into a string.
  *
  * Inputs: integer: The PyInt to serialize.
+ *         type: The type of integer to serialize (positive / negative).
  *         buffer: A pointer to a string to initialize and serialize integer to.
  *         size: A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
@@ -69,6 +70,11 @@ int serializeInt(PyObject *integer, char **buffer, unsigned long long *size) {
  */
 
     unsigned long long toSerialize = (unsigned long long) PyLong_AsLongLong(integer);
+
+    // If we've detected that we're serializing a negative integer, reverse the polarity on it (as we work unsigned)
+    if (type == NEG_INT_TYPE) {
+        toSerialize = -toSerialize;
+    }
 
     if (PyErr_Occurred() != NULL) {
         return 1;
@@ -109,6 +115,10 @@ PyObject *deserializeInt(UserBuffer *buf, unsigned char type, unsigned long long
         val |= (unsigned long long) byte << shift;
 
         shift += 8;
+    }
+
+    if (type == NEG_INT_TYPE) {
+        val = -val;
     }
 
     return PyInt_FromLong((long) val);

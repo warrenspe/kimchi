@@ -65,3 +65,7 @@ target/
 #Vim
 *.swp
 *.swo
+
+#C
+*.o
+*.dll

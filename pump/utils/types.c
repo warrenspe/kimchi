@@ -17,6 +17,7 @@
  */
 
 #include "headers/pump.h"
+#include "longintrepr.h"
 
 
 unsigned char getType(PyObject *obj) {
@@ -29,9 +30,13 @@ unsigned char getType(PyObject *obj) {
  */
 
     if (PyInt_Check(obj)) {
+        if (PyLong_AsLongLong(obj) < 0)
+            return NEG_INT_TYPE;
         return INT_TYPE;
 
     } else if (PyLong_Check(obj)) {
+        if (((PyLongObject *) obj)->ob_size < 0)
+            return NEG_LONG_TYPE;
         return LONG_TYPE;
 
     } else if (PyString_Check(obj)) {

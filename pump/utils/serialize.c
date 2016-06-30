@@ -41,12 +41,14 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
 
     switch (type) {
         case INT_TYPE:
-            if (serializeInt(object, &body, &bodySize))
+        case NEG_INT_TYPE:
+            if (serializeInt(object, type, &body, &bodySize))
                 return 1;
             break;
 
         case LONG_TYPE:
-            if (serializeLong(object, &body, &bodySize))
+        case NEG_LONG_TYPE:
+            if (serializeLong(object, type, &body, &bodySize))
                 return 1;
             break;
 
@@ -108,9 +110,11 @@ PyObject *deserialize(UserBuffer *buf) {
 
     switch (type) {
         case INT_TYPE:
+        case NEG_INT_TYPE:
             return deserializeInt(buf, type, size);
 
         case LONG_TYPE:
+        case NEG_LONG_TYPE:
             return deserializeLong(buf, type, size);
 
         case STRING_TYPE:

@@ -22,12 +22,14 @@
     // Serializable Type Definitions
     ///
     #define INT_TYPE 1
-    #define LONG_TYPE 2
-    #define STRING_TYPE 3
-    #define UNICODE_TYPE 4
-    #define LIST_TYPE 5
-    #define TUPLE_TYPE 6
-    #define DICT_TYPE 7
+    #define NEG_INT_TYPE 2
+    #define LONG_TYPE 3
+    #define NEG_LONG_TYPE 4
+    #define STRING_TYPE 5
+    #define UNICODE_TYPE 6
+    #define LIST_TYPE 7
+    #define TUPLE_TYPE 8
+    #define DICT_TYPE 9
 
 
     // Standard Library Includes
