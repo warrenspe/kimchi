@@ -51,6 +51,7 @@
     #include "serializers/int.c"
     #include "serializers/long.c"
     #include "serializers/string.c"
+    #include "serializers/unicode.c"
     #include "serializers/sequence.c"
 
     // Main C API Include

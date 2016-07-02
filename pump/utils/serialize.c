@@ -53,8 +53,12 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         case STRING_TYPE:
-        case UNICODE_TYPE:
             if (serializeString(object, &body, &bodySize))
+                return 1;
+            break;
+
+        case UNICODE_TYPE:
+            if (serializeUnicode(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -118,8 +122,10 @@ PyObject *deserialize(UserBuffer *buf) {
             return deserializeLong(buf, type, size);
 
         case STRING_TYPE:
-        case UNICODE_TYPE:
             return deserializeString(buf, type, size);
+
+        case UNICODE_TYPE:
+            return deserializeUnicode(buf, type, size);
 
         case LIST_TYPE:
         case TUPLE_TYPE:
