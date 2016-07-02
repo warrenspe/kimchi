@@ -15,6 +15,4 @@ class TestInteger(tests.PumpTestCase):
             -int(2**63 - 1)
         ]
 
-        for i in toTest:
-            deflated = pump.deflate(i)
-            self.assertEqual(i, pump.inflate(deflated))
+        self._test(toTest)

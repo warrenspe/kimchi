@@ -17,6 +17,4 @@ class TestLong(tests.PumpTestCase):
             -1238751298037598013268071263059871290387901283750781236876123847980127357806132904872198037478012635786132980750129837
         ]
 
-        for i in toTest:
-            deflated = pump.deflate(i)
-            self.assertEqual(i, pump.inflate(deflated))
+        self._test(toTest)

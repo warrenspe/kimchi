@@ -3,8 +3,7 @@ standardize docstrings:
 
 make sure all readbuffers check for NULL
 
-check serializing wonky unicode chars; alternately, in python require encoding, default to utf8
-
 optional hash validation
 
-alternatively, if all else fails for uni and long, use repr and a new type (for uni)
+TODO cross platform serializations (especially for unicode; currently assuming that the UNICHR width is always 2
+EDIT: perhaps a diff uni flagtype per width?

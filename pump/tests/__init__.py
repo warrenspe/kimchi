@@ -6,10 +6,19 @@ import unittest, argparse, sys, os
 sys.path.append('.')
 sys.path.append('..')
 
+# Projet imports
+import pump
+
 # Globals
 TEST_DIR = os.path.split(os.path.dirname(os.path.realpath(__file__)))[-1]
 
 class PumpTestCase(unittest.TestCase):
+
+    def _test(self, toTest):
+        for obj in toTest:
+            deflated = pump.deflate(obj)
+            self.assertEqual(obj, pump.inflate(deflated))
+
     @classmethod
     def setUpClass(cls):
         pass
