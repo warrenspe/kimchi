@@ -77,6 +77,12 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
                 return 1;
             break;
 
+        case SET_TYPE:
+        case FROZEN_SET_TYPE:
+            if (serializeSet(object, &body, &bodySize))
+                return 1;
+            break;
+
         case NONE_TYPE:
             if (serializeNone(object, &body, &bodySize))
                 return 1;
@@ -146,6 +152,10 @@ PyObject *deserialize(UserBuffer *buf) {
 
         case DICT_TYPE:
             return deserializeDict(buf, type, size);
+
+        case SET_TYPE:
+        case FROZEN_SET_TYPE:
+            return deserializeSet(buf, type, size);
 
         case NONE_TYPE:
             return deserializeNone(buf, type, size);

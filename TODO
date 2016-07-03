@@ -1,5 +1,3 @@
-make sure all readbuffers check for NULL
-
 optional hash validation
 
 TODO cross platform serializations (especially for unicode; currently assuming that the UNICHR width is always 2

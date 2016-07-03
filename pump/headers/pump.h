@@ -30,7 +30,9 @@
     #define LIST_TYPE 7
     #define TUPLE_TYPE 8
     #define DICT_TYPE 9
-    #define NONE_TYPE 10
+    #define SET_TYPE 10
+    #define FROZEN_SET_TYPE 11
+    #define NONE_TYPE 12
 
 
     // Standard Library Includes
@@ -56,6 +58,7 @@
     #include "serializers/tuple.c"
     #include "serializers/list.c"
     #include "serializers/dict.c"
+    #include "serializers/set.c"
     #include "serializers/none.c"
 
     // Main C API Include
