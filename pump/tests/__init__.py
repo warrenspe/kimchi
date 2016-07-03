@@ -16,8 +16,16 @@ class PumpTestCase(unittest.TestCase):
 
     def _test(self, toTest):
         for obj in toTest:
-            deflated = pump.deflate(obj)
-            self.assertEqual(obj, pump.inflate(deflated))
+            try:
+                deflated = pump.deflate(obj)
+            except Exception as e:
+                self.fail("Error deflating %s:\n%s" % (repr(obj), str(e)))
+
+            try:
+                inflated = pump.inflate(deflated)
+            except Exception as e:
+                self.fail("Error inflating %s (deflated: %r):\n%s" % (repr(obj), repr(deflated), str(e)))
+            self.assertEqual(obj, inflated)
 
     @classmethod
     def setUpClass(cls):

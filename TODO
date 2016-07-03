@@ -11,3 +11,5 @@ EDIT: perhaps a diff uni flagtype per width?
 Go through each serializer and check the reference count of returned objects to ensure they make sense
 
 remove varnames from prototypes
+
+trace all mallocs

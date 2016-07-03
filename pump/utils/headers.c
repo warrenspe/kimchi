@@ -21,13 +21,13 @@
 
 // Header constructing functions
 
-static long long _determineSizeBytes(Py_ssize_t size) {
-/* Calculates the length of the header field for a given serialization requiring size bytes.
+unsigned long long numSizeHeaderBytes(unsigned long long size) {
+/* Calculates the length of the header generated for the size field for a representation of the value `size`.
  *
- * Inputs: size - The size of the header for the serialization in bytes.
+ * Inputs: size - The number of bytes required to create a size header representing `size` bytes
  *
- * Outputs: An integer representing the number of bytes needed for the size prefix of the serialization,
- *          or 0 if the size of the serialized object is greater than we can fit into a long long.
+ * Outputs: An integer representing the number of bytes needed for the size header desired,
+ *          or 0 if the size is greater than can be fit into an unsigned long long.
  */
 
     long long upper = 128,
@@ -37,9 +37,7 @@ static long long _determineSizeBytes(Py_ssize_t size) {
         upper <<= 7; // Multiply by 128 (shift by 7; as we only use 7 out of the 8 bits)
         length += 1;
 
-        // If length is >= 10 we've hit an integer overflow; as long long's are at minimum 64 bits wide;
-        // and 128**10 > 2**64
-        if (length >= 10) {
+        if (length > MAX_SIZE_HEADER_LEN) {
             return 0;
         }
     }
@@ -48,25 +46,64 @@ static long long _determineSizeBytes(Py_ssize_t size) {
 }
 
 
-static void _writeHeaders(char *out, Py_ssize_t size, int sizeBytes, unsigned char type) {
-/* Function which writes the type and size headers to a buffer.
+void writeSizeHeader(char *out, unsigned long long size) {
+/* Function which writes size headers to a buffer.
+ *
+ * Note: No validation of arguments or buffer length is done.
  *
  * Inputs: out: The buffer to write to.
- *         size: The value to write for the size portion of the headers; detailing the size of the serialized body.
- *         sizeBytes: The number of bytes to serialize from size.
- *         type: A char, containing the value to serialize for the type portion of the headers.
+ *         size: The value to serialize in the size header.
  */
 
-    // Write the type byte to the headers
-    *out = type;
+    unsigned long long i = 0;
 
-    // Write the size bytes to the header
-    for (int i = 1; i <= sizeBytes; i++) {
-        *(out + i) = ((i == sizeBytes) << 7) | (size & 127);
+    do {
+        *(out + i++) = ((size >> 7 == 0) << 7) | (size & 127);
         size >>= 7;
-    }
+    } while (size);
 }
 
+
+int readSizeHeader(UserBuffer *buf, unsigned long long *size) {
+/* Function which reads size headers from a UserBuffer.
+ *
+ * Inputs: buf: The UserBuffer to read from.
+ *         size: The value to initialize with the size from `buf`.
+ *
+ * Outputs: 0 on Success. > 0 on failure.
+ */
+
+    int shift = 0,
+        i;
+    unsigned char sizeByte;
+
+    *size = 0;
+
+    // We never serialize more than MAX_SIZE_HEADER_LEN bytes
+    for (i = 0; i <= MAX_SIZE_HEADER_LEN; i++) {
+        if (readBuffer(buf, &sizeByte, 1)) {
+            return 1;
+        }
+
+        *size += (sizeByte & 127) << shift;
+
+        // Check if this was the last byte of the size headers
+        if (sizeByte & 128) {
+            break;
+        }
+
+        shift += 7;
+    }
+
+    // We should never receive a size header with more than MAX_SIZE_HEADER_LEN bytes
+    // If we do, something has corrupted our buffer.
+    if (i > MAX_SIZE_HEADER_LEN) {
+        PyErr_SetString(PyExc_ValueError, "Size header corrupted");
+        return 1;
+    }
+
+    return 0;
+}
 
 int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t size, unsigned char type) {
 /* Function which initializes and populates a buffer with headers for a serialized object.
@@ -80,7 +117,7 @@ int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t si
  */
 
     // Calculate how many bytes we need for the 'size' portion of the headers
-    long long sizeBytes = _determineSizeBytes(size);
+    unsigned long long sizeBytes = numSizeHeaderBytes((unsigned long long) size);
 
     if (!sizeBytes) {
         PyErr_SetString(PyExc_OverflowError, "Size field overflow.");
@@ -99,14 +136,17 @@ int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t si
 
     memset((void *) *out, '\0', *headerLength);
 
-    // Write the headers to the buffer
-    _writeHeaders(*out, size, sizeBytes, type);
+    // Write the type byte to the headers
+    **out = type;
+
+    // Write the size header to the buffer
+    writeSizeHeader((*out) + 1, size);
 
     return 0;
 }
 
 // Header parsing functions
-int parseHeaders(UserBuffer *buffer, unsigned char *type, unsigned long long *size) {
+int parseHeaders(UserBuffer *buf, unsigned char *type, unsigned long long *size) {
 /* Function which parses headers out of a UserBuffer
  *
  * Inputs: buffer - A UserBuffer struct to parse headers out of.
@@ -116,35 +156,12 @@ int parseHeaders(UserBuffer *buffer, unsigned char *type, unsigned long long *si
  * Outputs: 0 on Success. > 0 on failure.
  */
 
-    int shift = 0;
-    *size = 0;
-    unsigned char sizeByte;
-
     // Get the type; which is the first character of the headers
-    if (readBuffer(buffer, type, 1)) {
+    if (readBuffer(buf, type, 1)) {
         return 1;
     }
 
-    // Get the size of the serialized body
-    for (int i = 0; i < 10; i++) {
-        if (readBuffer(buffer, &sizeByte, 1)) {
-            return 1;
-        }
-
-        *size += (sizeByte & 127) << shift;
-
-        // Check if this was the last byte of the size headers
-        if (sizeByte & 128) {
-            break;
-        }
-
-        shift += 7;
-    }
-
-    // Check if we exited the loop due to maximum number of bytes, or due to a last-byte-in-size flag.
-    // If it's the prior, raise an exception. As we expect to see a last-byte-in-size flag.
-    if (!(sizeByte & 128)) {
-        PyErr_SetString(PyExc_ValueError, "Size header corrupted");
+    if (readSizeHeader(buf, size)) {
         return 1;
     }
 

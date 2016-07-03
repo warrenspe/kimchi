@@ -18,10 +18,15 @@
 #ifndef __HEADERS_H
 #define __HEADERS_H 1
 
+    // We assume we will never have to serialize an object which requires more storage than an unsigned long long can
+    // provide.  Since an unsigned long long can represent values up to 2**64, and 128**9 < 2**64 < 128**10, 9 bytes is
+    // the maximum length of the header.  (Note 128 instead of 256, as we only use 7 bits of a byte).
+    #define MAX_SIZE_HEADER_LEN 9
+
     // Function Prototypes
-    static long long _determineSizeBytes(Py_ssize_t size);
-    static void _writeHeaders(char *out, Py_ssize_t size, int sizeBytes, unsigned char type);
-    int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t size, unsigned char type);
+    unsigned long long numSizeHeaderBytes(unsigned long long);
+    void writeSizeHeader(char *, unsigned long long);
+    int constructHeaders(char **, unsigned long long *, Py_ssize_t, unsigned char);
     int parseHeaders(UserBuffer *buffer, unsigned char *type, unsigned long long *size);
 
     // Includes

@@ -47,7 +47,7 @@ int serializeTuple(PyObject *tuple, char **buffer, unsigned long long *size) {
     Py_ssize_t *sizes = NULL;
     PyObject *item;
     char **serializations = NULL;
-    unsigned long long bufferOffset = 0,
+    unsigned long long bufferOffset,
                        i,
                        numItems;
 
@@ -77,11 +77,18 @@ int serializeTuple(PyObject *tuple, char **buffer, unsigned long long *size) {
         *size += *(sizes + i);
     }
 
+    // Add the number of bytes required to create a serialized version of the number of items in the tuple
+    bufferOffset = numSizeHeaderBytes(numItems);
+    *size += bufferOffset;
+
     if ((*buffer = malloc(*size)) == NULL) {
         PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for serialization");
         _freeSerializeTupleBuffers(serializations, sizes, (*size));
         return 1;
     }
+
+    // Write the num items to the buffer
+    writeSizeHeader(*buffer, numItems);
 
     // Write each serialization to buffer
     for (i = 0; i < numItems; i++) {
@@ -104,12 +111,20 @@ PyObject *deserializeTuple(UserBuffer *buf, unsigned char type, unsigned long lo
  * Outputs: A Python Tuple.
  */
 
-    // TODO check refcount of our tuple here; if it's 1, when we fail below decref it by 1
-    PyObject *tuple = PyTuple_New(size);
+    PyObject *tuple;
     PyObject *item;
-    unsigned long long i;
+    unsigned long long numItems,
+                       i;
 
-    for (i = 0; i < size; i++) {
+    if (readSizeHeader(buf, &numItems)) {
+        return NULL;
+    }
+
+    if ((tuple = PyTuple_New(numItems)) == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; i < numItems; i++) {
         item = deserialize(buf);
         if (item == NULL || PyTuple_SetItem(tuple, i, item) == -1) {
             _PyTuple_Resize(&tuple, 0);

@@ -65,5 +65,7 @@ int readBuffer(UserBuffer *buf, unsigned char *out, unsigned long long bytesToRe
 
     memcpy(out, toWrite, bytesToRead);
 
+    buf->bytesRemaining -= bytesToRead;
+
     return 0;
 }

@@ -85,7 +85,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
     // Construct headers for this serialization
     constructHeaders(&headers, &headerSize, bodySize, type);
 
-    *outSize = bodySize + headerSize;
+    *outSize = headerSize + bodySize;
 
     // Create a string, concatenating headers and body
     (*out) = malloc(bodySize + headerSize + 1);
