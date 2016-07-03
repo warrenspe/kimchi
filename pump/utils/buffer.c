@@ -20,7 +20,7 @@
 #include "headers/pump.h"
 
 
-UserBuffer *initBuffer(char *buffer, long long bytesRemaining) {
+UserBuffer *initBuffer(char *buffer, unsigned long long bytesRemaining) {
 /* Initializes a UserBuffer, for the purposes of safely reading from.
  *
  * Inputs: buffer - A pointer to the buffer to read from.

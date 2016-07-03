@@ -7,3 +7,7 @@ optional hash validation
 
 TODO cross platform serializations (especially for unicode; currently assuming that the UNICHR width is always 2
 EDIT: perhaps a diff uni flagtype per width?
+
+Go through each serializer and check the reference count of returned objects to ensure they make sense
+
+remove varnames from prototypes

@@ -1,5 +1,5 @@
 /*
- *  sequence.c: A file containing functions used by pump.c to serialize sequential values, like lists and tuples.
+ *  tuple.c: A file containing functions used by pump.c to serialize Python Tuples.
  *  Copyright (C) 2016 Warren Spencer warrenspencer27@gmail.com
 
  *  This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,12 @@
 #include "headers/pump.h"
 
 // Function Prototypes
-void _freeSerializeBuffers(char **serializations, Py_ssize_t *sizes, unsigned long long numItems);
+static void _freeSerializeTupleBuffers(char **serializations, Py_ssize_t *sizes, unsigned long long numItems);
 int serializeSequence(PyObject *sequence, char **buffer, unsigned long long *size);
 PyObject *deserializeSequence(UserBuffer *buf, unsigned char type, unsigned long long size);
 
 
-void _freeSerializeBuffers(char **serializations, Py_ssize_t *sizes, unsigned long long numItems){
+static void _freeSerializeTupleBuffers(char **serializations, Py_ssize_t *sizes, unsigned long long numItems){
     unsigned long long i;
 
     for (i = 0; i < numItems; i++) {
@@ -34,54 +34,43 @@ void _freeSerializeBuffers(char **serializations, Py_ssize_t *sizes, unsigned lo
     free(sizes);
 }
 
-int serializeSequence(PyObject *sequence, char **buffer, unsigned long long *size) {
-/* Function which serializes a Python list or tuple into a string.
+int serializeTuple(PyObject *tuple, char **buffer, unsigned long long *size) {
+/* Function which serializes a Python tuple into a string.
  *
- * Inputs: sequence: The Python list or tuple to serialize.
- *         buffer: A pointer to a string to initialize and serialize sequence to.
+ * Inputs: tuple: The Python tuple to serialize.
+ *         buffer: A pointer to a string to initialize and serialize tuple to.
  *         size: A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
  * Outputs: 0 on success. > 0 on Failure.
  */
 
-    unsigned long long numItems,
-                        tmp,
-                        i;
-    unsigned char type;
-    char **serializations = NULL;
     Py_ssize_t *sizes = NULL;
     PyObject *item;
+    char **serializations = NULL;
+    unsigned long long bufferOffset = 0,
+                       i,
+                       numItems;
 
-    type = getType(sequence);
+    numItems = PyTuple_Size(tuple);
     *size = 0;
 
-    if (type == TUPLE_TYPE) {
-        numItems = PyTuple_Size(sequence);
-    } else {
-        numItems = PyList_Size(sequence);
-    }
-
-    // Create an array of strings containing serializations of the objets in sequence
+    // Create an array of strings containing serializations of the objects in the tuple
     if ((serializations = calloc(numItems, sizeof(char *))) == NULL) {
         return 1;
     }
 
     // Create an array of sizes of the objects to serialize
     if ((sizes = calloc(numItems, sizeof(unsigned long long *))) == NULL) {
-        _freeSerializeBuffers(serializations, sizes, 0);
+        _freeSerializeTupleBuffers(serializations, sizes, 0);
         return 1;
     }
 
     // Serialize each item
     for (i = 0; i < numItems; i++) {
-        if (type == TUPLE_TYPE) {
-            item = PyTuple_GET_ITEM(sequence, i);
-        } else {
-            item = PyList_GET_ITEM(sequence, i);
-        }
+        item = PyTuple_GET_ITEM(tuple, i);
 
         if (serialize(item, (serializations + i), (sizes + i))) {
-            _freeSerializeBuffers(serializations, sizes, i);
+            _freeSerializeTupleBuffers(serializations, sizes, i);
             return 1;
         }
 
@@ -90,32 +79,45 @@ int serializeSequence(PyObject *sequence, char **buffer, unsigned long long *siz
 
     if ((*buffer = malloc(*size)) == NULL) {
         PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for serialization");
-        _freeSerializeBuffers(serializations, sizes, numItems);
+        _freeSerializeTupleBuffers(serializations, sizes, (*size));
         return 1;
     }
-    memset((void *) *buffer, '\0', *size);
 
     // Write each serialization to buffer
-    tmp = 0;
     for (i = 0; i < numItems; i++) {
-        memcpy((void *) ((*buffer) + tmp), serializations + i, *(sizes + i));
-        tmp += *(sizes + i);
+        memcpy((void *) ((*buffer) + bufferOffset), *(serializations + i), *(sizes + i));
+        bufferOffset += *(sizes + i);
     }
 
-    _freeSerializeBuffers(serializations, sizes, numItems);
+    _freeSerializeTupleBuffers(serializations, sizes, numItems);
 
     return 0;
 }
 
-PyObject *deserializeSequence(UserBuffer *buf, unsigned char type, unsigned long long size) {
-/* Function which deserializes a sequence into a Python List or Tuple.
+PyObject *deserializeTuple(UserBuffer *buf, unsigned char type, unsigned long long size) {
+/* Function which deserializes a tuple into a Python Tuple.
  *
- * Inputs: buf  - A UserBuffer containing the data to convert into a List / Tuple.
+ * Inputs: buf  - A UserBuffer containing the data to convert into a Tuple.
  *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the items of the List / Tuple.
+ *         size - The number of bytes to use in constructing the items of the Tuple.
  *
- * Outputs: A Python List / Tuple.
+ * Outputs: A Python Tuple.
  */
 
-    return NULL;
+    // TODO check refcount of our tuple here; if it's 1, when we fail below decref it by 1
+    PyObject *tuple = PyTuple_New(size);
+    PyObject *item;
+    unsigned long long i;
+
+    for (i = 0; i < size; i++) {
+        item = deserialize(buf);
+        if (item == NULL || PyTuple_SetItem(tuple, i, item) == -1) {
+            _PyTuple_Resize(&tuple, 0);
+            Py_DECREF(tuple);
+            return NULL;
+        }
+        Py_INCREF(item); // TODO check refcount of item here, see if we need dis
+    }
+
+    return tuple;
 }

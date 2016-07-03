@@ -21,11 +21,11 @@
     // Struct to hold a serialized object; ensuring we do not read past its length
     typedef struct UserBuffer {
         char *buffer;
-        long long bytesRemaining;
+        unsigned long long bytesRemaining;
     } UserBuffer;
 
     // Function Prototypes
-    UserBuffer *initBuffer(char *buffer, long long bytesRemaining);
+    UserBuffer *initBuffer(char *buffer, unsigned long long bytesRemaining);
     int readBuffer(UserBuffer *buf, unsigned char *out, unsigned long long bytesToRead);
 
     // Includes
