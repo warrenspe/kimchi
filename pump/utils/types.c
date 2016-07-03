@@ -54,6 +54,8 @@ unsigned char getType(PyObject *obj) {
     } else if (PyDict_Check(obj)) {
         return DICT_TYPE;
 
+    } else if (obj == Py_None) {
+        return NONE_TYPE;
     }
 
     PyErr_Format(PyExc_TypeError, "Unknown object type \"%.400s\"", Py_TYPE(obj)->tp_name);

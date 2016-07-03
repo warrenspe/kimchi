@@ -16,7 +16,7 @@ class TestTuple(tests.PumpTestCase):
             tuple(range(900000)),
             ((1, 2), (4, 5), ((6, 7), (8,), tuple())),
             ((((((tuple(),),),),),),),
-            ([], [], [], [tuple()])
+            ([], [], [], None, [tuple()])
         ]
 
         self._test(toTest)

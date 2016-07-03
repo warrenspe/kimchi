@@ -77,6 +77,11 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
                 return 1;
             break;
 
+        case NONE_TYPE:
+            if (serializeNone(object, &body, &bodySize))
+                return 1;
+            break;
+
         default:
             PyErr_Format(PyExc_TypeError,
                          "Cannot serialize object; unserializable type \"%.400s\"",
@@ -141,6 +146,9 @@ PyObject *deserialize(UserBuffer *buf) {
 
         case DICT_TYPE:
             return deserializeDict(buf, type, size);
+
+        case NONE_TYPE:
+            return deserializeNone(buf, type, size);
     }
 
     PyErr_Format(PyExc_TypeError, "Cannot deserialize object; unrecognized type flag: %d", type);

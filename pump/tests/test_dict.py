@@ -9,7 +9,7 @@ class TestDict(tests.PumpTestCase):
             dict(),
             {1: 2},
             dict([(a, a + 1) for a in range(15000)]),
-            {3: {2: {1: {0: -1}}}}
+            {3: {2: {1: {0: None}}}}
         ]
 
         self._test(toTest)
