@@ -9,8 +9,6 @@ Go through each serializer and check the reference count of returned objects to 
 
 trace all mallocs
 
-up the unrecognized type error message to include the type name
-
 see if we can remove the py_incref in pump.c; most serializations seem to have it set already (int / str might need it manually)
     If this is the case, throw some docs into README or wherever telling people to ensure that ref is 1 when ser terms
 

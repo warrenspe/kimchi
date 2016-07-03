@@ -56,6 +56,6 @@ unsigned char getType(PyObject *obj) {
 
     }
 
-    PyErr_SetString(PyExc_TypeError, "Unknown object type");
+    PyErr_Format(PyExc_TypeError, "Unknown object type \"%.400s\"", Py_TYPE(obj)->tp_name);
     return 0;
 }
