@@ -25,8 +25,8 @@
     } UserBuffer;
 
     // Function Prototypes
-    UserBuffer *initBuffer(char *buffer, unsigned long long bytesRemaining);
-    int readBuffer(UserBuffer *buf, unsigned char *out, unsigned long long bytesToRead);
+    UserBuffer *initBuffer(char *, unsigned long long);
+    int readBuffer(UserBuffer *, unsigned char *, unsigned long long);
 
     // Includes
     #include "utils/buffer.c"

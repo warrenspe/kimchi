@@ -20,13 +20,13 @@
 
 
 int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
-/* Function which can accept various objects and convert them into a serialized version
+/* Function which can accept various objects and convert them into a serialized string version.
  * 
- * Inputs: object: A Python object to be serialized.
- *         out: A pointer to a string pointer to initialize and fill with object's serialization.
- *         outSize: A pointer to an int recording the size of the string placed into out.
+ * Inputs: object  - A Python object to be serialized.
+ *         out     - A pointer to a string pointer to initialize and fill with object's serialization.
+ *         outSize - A pointer to an int recording the size of the string placed into out.
  *
- * Outputs: 0 on success.  > 0 on failure.
+ * Outputs: 0 on success. > 0 on failure.
  */
 
     char *body,
@@ -73,7 +73,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         case DICT_TYPE:
-            if (1)
+            if (serializeDict(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -102,11 +102,11 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
 }
 
 PyObject *deserialize(UserBuffer *buf) {
-/* Function which takes a byte string in the form of a UserBuffer and deserializes it into a Python object
+/* Function which takes a byte string in the form of a UserBuffer and deserializes it into a Python object.
  *
  * Inputs: buf - A UserBuffer struct containing the buffer to deserialize.
  *
- * Outputs: The deserialized Python object.
+ * Outputs: The deserialized Python object, or NULL if an error occurs.
  */
 
     unsigned char type; // Type of object being deserialized
@@ -138,7 +138,7 @@ PyObject *deserialize(UserBuffer *buf) {
             return deserializeTuple(buf, type, size);
 
         case DICT_TYPE:
-            break;
+            return deserializeDict(buf, type, size);
     }
 
     PyErr_SetString(PyExc_TypeError, "Cannot deserialize object; unrecognized type.");

@@ -19,16 +19,16 @@
 #include "headers/pump.h"
 
 // Function Prototypes
-static unsigned long long _numBytesToSerialize(unsigned long long toSerialize);
-static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, unsigned long long size);
-int serializeInt(PyObject *integer, unsigned char type, char **buffer, unsigned long long *size);
-PyObject *deserializeInt(UserBuffer *buf, unsigned char type, unsigned long long size);
+static unsigned long long _numBytesToSerialize(unsigned long long);
+static void _writeBytesToBuffer(unsigned long long, char *, unsigned long long);
+int serializeInt(PyObject *, unsigned char, char **, unsigned long long *);
+PyObject *deserializeInt(UserBuffer *, unsigned char, unsigned long long);
 
 
 static unsigned long long _numBytesToSerialize(unsigned long long toSerialize) {
 /* Function which calculates the number of bytes required to serialize this value.
  *
- * Inputs: toSerialize: The value we will be determining the size of the serialization of.
+ * Inputs: toSerialize - The value we will be determining the size of the serialization of.
  *
  * Outputs: The number of bytes required to serialize `toSerialize`.
  */
@@ -46,9 +46,9 @@ static unsigned long long _numBytesToSerialize(unsigned long long toSerialize) {
 static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, unsigned long long size) {
 /* Function which writes `size` bytes to `buffer`, from `toSerialize`.
  *
- * Inputs: toSerialize: The value we're serializing to buffer.
- *         buffer: The buffer we're serializing toSerialize to.
- *         size: The number of bytes we need to serialize into buffer.
+ * Inputs: toSerialize - The value we're serializing to buffer.
+ *         buffer      - The buffer we're serializing toSerialize to.
+ *         size        - The number of bytes we need to serialize into buffer.
  */
 
     for (int i = 0; i < size; i++) {
@@ -61,12 +61,12 @@ static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, un
 int serializeInt(PyObject *integer, unsigned char type, char **buffer, unsigned long long *size) {
 /* Function which serializes a Python int into a string.
  *
- * Inputs: integer: The PyInt to serialize.
- *         type: The type of integer to serialize (positive / negative).
- *         buffer: A pointer to a string to initialize and serialize integer to.
- *         size: A pointer to a long long to fill with the number of bytes serialized to buffer.
+ * Inputs: integer - The PyInt to serialize.
+ *         type    - The type of integer to serialize (positive / negative).
+ *         buffer  - A pointer to a string to initialize and serialize integer to.
+ *         size    - A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
- * Outputs: 0 on success. > 0 on Failure.
+ * Outputs: 0 on success. > 0 on failure.
  */
 
     unsigned long long toSerialize = (unsigned long long) PyLong_AsLongLong(integer);
@@ -100,7 +100,7 @@ PyObject *deserializeInt(UserBuffer *buf, unsigned char type, unsigned long long
  *         type - A char containing the type of object we're deserializing.
  *         size - The number of bytes to use in constructing the PyInt.
  *
- * Outputs: A Python int.
+ * Outputs: A Python int, or NULL if an error occurs.
  */
 
     unsigned long long val = 0;

@@ -22,10 +22,10 @@
 PyObject *deflate(PyObject *self, PyObject *args) {
 /* API function which serializes a python object.
  *
- * Inputs: self: Unused. The required `self` parameter of any python-visible function.
- *         args: Positional arguments passed to the function.
+ * Inputs: self - Unused. The required `self` parameter of any python-visible function.
+ *         args - Positional arguments passed to the function.
  *
- * Outputs: A Python string containing the serialized value of the passed object.
+ * Outputs: A Python string containing the serialized value of the passed object, or NULL if an error occurs.
  */
 
     PyObject *obj;
@@ -50,10 +50,10 @@ PyObject *deflate(PyObject *self, PyObject *args) {
 PyObject *inflate(PyObject *self, PyObject *args) {
 /* API function which deserializes a python object.
  *
- * Inputs: self: Unused. The required `self` parameter of any python-visible function.
- *         args: Positional arguments passed to the function.
+ * Inputs: self - Unused. The required `self` parameter of any python-visible function.
+ *         args - Positional arguments passed to the function.
  *
- * Outputs: A copy of the original Python object serialized by the deflate function.
+ * Outputs: A copy of the original Python object serialized by the deflate function, or NULL if an error occurs.
  */
 
     PyObject *obj;

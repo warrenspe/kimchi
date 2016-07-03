@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Standard imports
-import unittest, argparse, sys, os
+import unittest, argparse, sys, os, time, pickle
 
 sys.path.append('.')
 sys.path.append('..')
@@ -11,21 +11,53 @@ import pump
 
 # Globals
 TEST_DIR = os.path.split(os.path.dirname(os.path.realpath(__file__)))[-1]
+PICKLE_CMP = 0
 
 class PumpTestCase(unittest.TestCase):
 
-    def _test(self, toTest):
-        for obj in toTest:
-            try:
-                deflated = pump.deflate(obj)
-            except Exception as e:
-                self.fail("Error deflating %s:\n%s" % (repr(obj), str(e)))
+    def __test(self, obj, ser, deser):
+            serName = ser.__name__
+            deserName = deser.__name__
 
             try:
-                inflated = pump.inflate(deflated)
+                before = time.time()
+                deflated = ser(obj)
+                serElapsed = time.time() - before
             except Exception as e:
-                self.fail("Error inflating %s (deflated: %r):\n%s" % (repr(obj), repr(deflated), str(e)))
-            self.assertEqual(obj, inflated)
+                self.fail("Error in (%s) serializing %s:\n%s" % (serName, repr(obj), str(e)))
+
+            try:
+                before = time.time()
+                inflated = deser(deflated)
+                deserElapsed = time.time() - before
+            except Exception as e:
+                self.fail("Error in (%s) deserializing %s (serialized: %r):\n%s"
+                          % (deserName, repr(obj), repr(deflated), str(e)))
+            if obj != inflated:
+                self.fail("%s != %s; using %s, %s" % (repr(obj), repr(inflated), serName, deserName))
+
+            return serElapsed, deserElapsed, len(deflated)
+
+
+    def _test(self, toTest):
+        for obj in toTest:
+            pumpSerElapsed, pumpDeserElapsed, pumpSerializedSize = self.__test(obj, pump.deflate, pump.inflate)
+            if PICKLE_CMP:
+                pickleSerElapsed, pickleDeserElapsed, pickleSerializedSize = self.__test(obj, pickle.dumps, pickle.loads)
+                print "\n".join(("",
+                    "%s:" % repr(obj)[:125],
+                    "Time to serialize:",
+                    "    pump: %s" % pumpSerElapsed,
+                    "    pickle: %s" % pickleSerElapsed,
+                    "Time to deserialize:",
+                    "    pump: %s" % pumpDeserElapsed,
+                    "    pickle: %s" % pickleDeserElapsed,
+                    "Serialization length:",
+                    "    pump: %s" % pumpSerializedSize,
+                    "    pickle: %s" % pickleSerializedSize
+                ))
+                      
+
 
     @classmethod
     def setUpClass(cls):
@@ -51,6 +83,8 @@ def _runSuite(testSuite, verbosity):
     sys.stdin.readline()
 
 def main():
+    global PICKLE_CMP
+
     parser = argparse.ArgumentParser(description="Execute pump Unit Tests")
     parser.add_argument("testFiles", nargs="*")
     parser.add_argument("--verbosity", nargs="?", choices=['1', '2'], default=1)

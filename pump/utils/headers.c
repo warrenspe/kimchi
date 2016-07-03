@@ -24,7 +24,7 @@
 unsigned long long numSizeHeaderBytes(unsigned long long size) {
 /* Calculates the length of the header generated for the size field for a representation of the value `size`.
  *
- * Inputs: size - The number of bytes required to create a size header representing `size` bytes
+ * Inputs: size - The number of bytes required to create a size header representing `size` bytes.
  *
  * Outputs: An integer representing the number of bytes needed for the size header desired,
  *          or 0 if the size is greater than can be fit into an unsigned long long.
@@ -51,8 +51,8 @@ void writeSizeHeader(char *out, unsigned long long size) {
  *
  * Note: No validation of arguments or buffer length is done.
  *
- * Inputs: out: The buffer to write to.
- *         size: The value to serialize in the size header.
+ * Inputs: out  - The buffer to write to.
+ *         size - The value to serialize in the size header.
  */
 
     unsigned long long i = 0;
@@ -67,8 +67,8 @@ void writeSizeHeader(char *out, unsigned long long size) {
 int readSizeHeader(UserBuffer *buf, unsigned long long *size) {
 /* Function which reads size headers from a UserBuffer.
  *
- * Inputs: buf: The UserBuffer to read from.
- *         size: The value to initialize with the size from `buf`.
+ * Inputs: buf  - The UserBuffer to read from.
+ *         size - The value to initialize with the size from `buf`.
  *
  * Outputs: 0 on Success. > 0 on failure.
  */
@@ -108,10 +108,10 @@ int readSizeHeader(UserBuffer *buf, unsigned long long *size) {
 int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t size, unsigned char type) {
 /* Function which initializes and populates a buffer with headers for a serialized object.
  *
- * Inputs: out: A pointer to a string to initialize and populate with our headers.
- *         headerLength: A pointer to an integer to populate with the number of bytes in our headers.
- *         size: A value containing the size of the serialized body.
- *         type: A char containing the type of value which is being serialized.
+ * Inputs: out          - A pointer to a string to initialize and populate with our headers.
+ *         headerLength - A pointer to an integer to populate with the number of bytes in our headers.
+ *         size         - A value containing the size of the serialized body.
+ *         type         - A char containing the type of value which is being serialized.
  *
  * Outputs: 0 on Success. > 0 on failure.
  */
@@ -147,11 +147,11 @@ int constructHeaders(char **out, unsigned long long *headerLength, Py_ssize_t si
 
 // Header parsing functions
 int parseHeaders(UserBuffer *buf, unsigned char *type, unsigned long long *size) {
-/* Function which parses headers out of a UserBuffer
+/* Function which parses headers out of a UserBuffer.
  *
- * Inputs: buffer - A UserBuffer struct to parse headers out of.
- *         type   - A pointer to a char to initialize with the type read from the buffer.
- *         size   - A pointer to a long long to initialize with the size of the data to deserialize.
+ * Inputs: buf  - A UserBuffer struct to parse headers out of.
+ *         type - A pointer to a char to initialize with the type read from the buffer.
+ *         size - A pointer to a long long to initialize with the size of the data to deserialize.
  *
  * Outputs: 0 on Success. > 0 on failure.
  */

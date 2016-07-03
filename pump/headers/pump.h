@@ -54,14 +54,15 @@
     #include "serializers/unicode.c"
     #include "serializers/tuple.c"
     #include "serializers/list.c"
+    #include "serializers/dict.c"
 
     // Main C API Include
     #include "headers/serialize.h"
 
 
     // pump.c Function Prototypes
-    PyObject *deflate(PyObject *self, PyObject *args);
-    PyObject *inflate(PyObject *self, PyObject *args);
+    PyObject *deflate(PyObject *, PyObject *);
+    PyObject *inflate(PyObject *, PyObject *);
     void initpump(void);
 
 #endif

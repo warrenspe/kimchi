@@ -19,7 +19,7 @@
 #define __TYPES_H 1
 
     // Function Prototypes
-    unsigned char getType(PyObject *obj);
+    unsigned char getType(PyObject *);
 
     // Includes
     #include "utils/types.c"

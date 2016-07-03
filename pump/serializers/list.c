@@ -19,12 +19,20 @@
 #include "headers/pump.h"
 
 // Function Prototypes
-static void _freeSerializeListBuffers(char **, Py_ssize_t *, unsigned long long);
+static void _freeSerializeListBuffers(char **, unsigned long long *, unsigned long long);
 int serializeList(PyObject *, char **, unsigned long long *);
 PyObject *deserializeList(UserBuffer *, unsigned char, unsigned long long);
 
 
-static void _freeSerializeListBuffers(char **serializations, Py_ssize_t *sizes, unsigned long long numItems) {
+static void _freeSerializeListBuffers(char **serializations, unsigned long long *sizes, unsigned long long numItems) {
+/* Function which frees several buffers used when serializing a Python List.
+ *
+ * Inputs: serializations - A pointer to a block of memory used to hold pointers to buffers recording each item's
+ *                          serializations.
+ *         sizes          - A pointer to an block of memory used to record the sizes of each item's serialization.
+ *         numItems       - A value containing the number of items in serializations to free.
+ */
+
     unsigned long long i;
 
     for (i = 0; i < numItems; i++) {
@@ -35,19 +43,19 @@ static void _freeSerializeListBuffers(char **serializations, Py_ssize_t *sizes, 
 }
 
 int serializeList(PyObject *list, char **buffer, unsigned long long *size) {
-/* Function which serializes a Python list into a string.
+/* Function which serializes a Python List into a string.
  *
- * Inputs: list: The Python list to serialize.
- *         buffer: A pointer to a string to initialize and serialize `list` to.
- *         size: A pointer to a long long to fill with the number of bytes serialized to buffer.
+ * Inputs: list   - The Python List to serialize.
+ *         buffer - A pointer to a string to initialize and serialize `list` to.
+ *         size   - A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
  * Outputs: 0 on success. > 0 on failure.
  */
 
-    Py_ssize_t *sizes = NULL;
     PyObject *item;
-    char **serializations = NULL;
-    unsigned long long bufferOffset,
+    char **serializations;
+    unsigned long long *sizes,
+                       bufferOffset,
                        i,
                        numItems;
 
@@ -69,7 +77,7 @@ int serializeList(PyObject *list, char **buffer, unsigned long long *size) {
     for (i = 0; i < numItems; i++) {
         item = PyList_GetItem(list, i);
 
-        if (serialize(item, (serializations + i), (sizes + i))) {
+        if (serialize(item, (serializations + i), (Py_ssize_t *) (sizes + i))) {
             _freeSerializeListBuffers(serializations, sizes, i);
             return 1;
         }
@@ -108,7 +116,7 @@ PyObject *deserializeList(UserBuffer *buf, unsigned char type, unsigned long lon
  *         type - A char containing the type of object we're deserializing.
  *         size - The number of bytes to use in constructing the items of the list.
  *
- * Outputs: A Python List.
+ * Outputs: A Python List, or NULL if an error occurs.
  */
 
     PyObject *list;

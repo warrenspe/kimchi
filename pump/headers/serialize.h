@@ -18,8 +18,8 @@
 #ifndef __SERIALIZE_H
 
     // Function Prototypes
-    int serialize(PyObject *object, char **out, Py_ssize_t *outSize);
-    PyObject *deserialize(UserBuffer *buf);
+    int serialize(PyObject *, char **, Py_ssize_t *);
+    PyObject *deserialize(UserBuffer *);
 
     // Includes
 

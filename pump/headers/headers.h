@@ -27,7 +27,7 @@
     unsigned long long numSizeHeaderBytes(unsigned long long);
     void writeSizeHeader(char *, unsigned long long);
     int constructHeaders(char **, unsigned long long *, Py_ssize_t, unsigned char);
-    int parseHeaders(UserBuffer *buffer, unsigned char *type, unsigned long long *size);
+    int parseHeaders(UserBuffer *, unsigned char *, unsigned long long *);
 
     // Includes
     #include "utils/headers.c"

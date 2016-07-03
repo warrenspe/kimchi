@@ -23,7 +23,7 @@
 UserBuffer *initBuffer(char *buffer, unsigned long long bytesRemaining) {
 /* Initializes a UserBuffer, for the purposes of safely reading from.
  *
- * Inputs: buffer - A pointer to the buffer to read from.
+ * Inputs: buffer         - A pointer to the buffer to read from.
  *         bytesRemaining - The number of bytes in buffer to read.
  *
  * Outputs: An instance of UserBuffer to read from.
@@ -45,11 +45,11 @@ UserBuffer *initBuffer(char *buffer, unsigned long long bytesRemaining) {
 int readBuffer(UserBuffer *buf, unsigned char *out, unsigned long long bytesToRead) {
 /* Reads from a UserBuffer.  Ensures that we are not reading past the end of the buffer.
  *
- * Inputs: buf - The UserBuffer to read from.
- *         out - A char pointer to a string with sufficient memory (bytesToRead) to write to.
+ * Inputs: buf         - The UserBuffer to read from.
+ *         out         - A char pointer to a string with sufficient memory (bytesToRead) to write to.
  *         bytesToRead - The number of bytes to read from `buf`.
  *
- * Outputs: 0 if successful.  > 0 otherwise.
+ * Outputs: 0 if successful. > 0 otherwise.
  */
 
     char *toWrite;

@@ -19,18 +19,18 @@
 #include "headers/pump.h"
 
 // Function prototypes
-int serializeString(PyObject *str, char **buffer, unsigned long long *size);
-PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long long size);
+int serializeString(PyObject *, char **, unsigned long long *);
+PyObject *deserializeString(UserBuffer *, unsigned char, unsigned long long);
 
 
 int serializeString(PyObject *str, char **buffer, unsigned long long *size) {
-/* Function which serializes a Python String or Unicode to a bytestring.
- *  *
- * Inputs: str: The PyStr or PyUnicode to serialize.
- *         buffer: A pointer to a string to initialize and serialize str to.
- *         size: A pointer to a long long to fill with the number of bytes serialized to buffer.
+/* Function which serializes a Python String to a string.
  *
- * Outputs: 0 on success. > 0 on Failure.
+ * Inputs: str    - The PyStr to serialize.
+ *         buffer - A pointer to a string to initialize and serialize str to.
+ *         size   - A pointer to a long long to fill with the number of bytes serialized to buffer.
+ *
+ * Outputs: 0 on success. > 0 on failure.
  */
 
     char *tmpBuffer;
@@ -52,13 +52,13 @@ int serializeString(PyObject *str, char **buffer, unsigned long long *size) {
 }
 
 PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long long size) {
-/* Function which deserializes a string into a PyStr or PyUnicode.
+/* Function which deserializes a string into a PyStr.
  *
- * Inputs: buf  - A UserBuffer containing the data to convert into a PyStr / PyUnicode
+ * Inputs: buf  - A UserBuffer containing the data to convert into a PyStr.
  *         type - A char containing the type of the object we're deserializing.
- *         size - The number of bytes to use in constructing the PyStr / PyUnicode.
+ *         size - The number of bytes to use in constructing the PyStr.
  *
- * Outputs: A Python String / Unicode object.
+ * Outputs: A Python String object, or NULL if an error occurs.
  */
 
     unsigned char *bytes;
