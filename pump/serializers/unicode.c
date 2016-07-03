@@ -56,19 +56,18 @@ PyObject *deserializeUnicode(UserBuffer *buf, unsigned char type, unsigned long 
  * Outputs: A Python Unicode object, or NULL if an error occurs.
  */
 
-    const char *strPointer;
     PyObject *unicode;
 
     // Because _PyUnicode_New is static; we have to use a bit of a roundabout way of getting our hands
     // on a PyUnicode object.
     unicode = PyUnicode_FromUnicode(NULL, (Py_ssize_t) size / sizeof(Py_UNICODE));
-    strPointer = PyUnicode_AS_DATA(unicode);
 
     if (unicode == NULL) {
         return NULL;
     }
 
-    if (readBuffer(buf, (unsigned char *) strPointer, size)) {
+    if (readBuffer(buf, (unsigned char *) PyUnicode_AS_DATA(unicode), size)) {
+        Py_DECREF(unicode);
         return NULL;
     }
 

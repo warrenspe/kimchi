@@ -31,6 +31,7 @@ NOTE: Not ready for use
 /* NOTE: To extend this library with the ability to serialize new types the following steps should be taken:
  *
  * 1. Add a new entry to pump/pump.h: Type Definitions.  Follow the conventions existing in the file.
+ *    Ensure that the Python Object returned from your deserialization has a ref count of 1.
  * 2. Add an entry to if block chain in pump/utils/types.c discerning whether a generic python object is of your new type.
  * 3. Add a new file to pump/serializers/, to (de)serialize your type.  Follow the conventions of other files in that directory.
  * 4. Add a case to the switches in pump/utils/serialize.c calling the functions in your new /serializers/ file.

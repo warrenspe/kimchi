@@ -5,16 +5,7 @@ optional hash validation
 TODO cross platform serializations (especially for unicode; currently assuming that the UNICHR width is always 2
 EDIT: perhaps a diff uni flagtype per width?
 
-Go through each serializer and check the reference count of returned objects to ensure they make sense
-
-trace all mallocs
-
-see if we can remove the py_incref in pump.c; most serializations seem to have it set already (int / str might need it manually)
-    If this is the case, throw some docs into README or wherever telling people to ensure that ref is 1 when ser terms
-
-
 once we start doing py3 support; see about making the py2 dict serializer more efficient (look at dict_items)
 
-None Type
 Set Type
 float Type

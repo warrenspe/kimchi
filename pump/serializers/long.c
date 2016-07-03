@@ -64,18 +64,13 @@ PyObject *deserializeLong(UserBuffer *buf, unsigned char type, unsigned long lon
  */
 
     PyLongObject *pyLong = _PyLong_New((Py_ssize_t) size / sizeof(digit));
-    unsigned char *bytes;
 
     if (type == NEG_LONG_TYPE) {
         pyLong->ob_size = -pyLong->ob_size;
     }
 
-    if ((bytes = malloc(size)) == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for deserialization");
-        return NULL;
-    }
-
     if (readBuffer(buf, (unsigned char *) (pyLong->ob_digit), size)) {
+        Py_DECREF(pyLong);
         return NULL;
     }
 

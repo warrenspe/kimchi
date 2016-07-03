@@ -11,7 +11,7 @@ import pump
 
 # Globals
 TEST_DIR = os.path.split(os.path.dirname(os.path.realpath(__file__)))[-1]
-PICKLE_CMP = 1
+PICKLE_CMP = 0
 
 class PumpTestCase(unittest.TestCase):
 

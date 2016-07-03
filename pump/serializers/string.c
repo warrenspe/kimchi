@@ -35,7 +35,7 @@ int serializeString(PyObject *str, char **buffer, unsigned long long *size) {
 
     char *tmpBuffer;
 
-    // Retrieve the internal string from the PyStr / PyUnicode
+    // Retrieve the internal string from the PyStr
     if (PyString_AsStringAndSize(str, &tmpBuffer, (Py_ssize_t *) size) == -1) {
         return 1;
     }
@@ -62,6 +62,7 @@ PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long l
  */
 
     unsigned char *bytes;
+    PyObject *pyStr;
 
     if ((bytes = malloc(size)) == NULL) {
         PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for deserialization");
@@ -69,13 +70,15 @@ PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long l
     }
 
     if (readBuffer(buf, bytes, size)) {
+        free(bytes);
         return NULL;
     }
 
+    pyStr = PyString_FromStringAndSize((char *) bytes, (Py_ssize_t) size);
 
-    if (type == UNICODE_TYPE) {
-        return PyUnicode_FromStringAndSize((char *) bytes, (Py_ssize_t) size);
+    if (pyStr == NULL) {
+        free(bytes);
     }
 
-    return PyString_FromStringAndSize((char *) bytes, (Py_ssize_t) size);
+    return pyStr;
 }

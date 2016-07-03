@@ -41,7 +41,6 @@ PyObject *deflate(PyObject *self, PyObject *args) {
     }
 
     obj = PyString_FromStringAndSize(outputBuffer, (Py_ssize_t) size);
-    Py_INCREF(obj);
     free(outputBuffer);
 
     return obj;
@@ -71,10 +70,6 @@ PyObject *inflate(PyObject *self, PyObject *args) {
 
     obj = deserialize(buf);
     free(buf);
-
-    if (obj != NULL) {
-        Py_INCREF(obj);
-    }
 
     return obj;
 }
