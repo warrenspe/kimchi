@@ -53,7 +53,7 @@
     #include "serializers/string.c"
     #include "serializers/unicode.c"
     #include "serializers/tuple.c"
-    //#include "serializers/list.c"
+    #include "serializers/list.c"
 
     // Main C API Include
     #include "headers/serialize.h"

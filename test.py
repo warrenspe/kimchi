@@ -3,7 +3,8 @@ import pickle
 
 OBJ = -100012L
 OBJ = u'\u2208\u2394\x12\xFF\x00'
-OBJ = (1,)
+OBJ = ([],)
+OBJ = ((112598712587192579182759871,),)
 
 def main():
     obj = OBJ

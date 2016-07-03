@@ -63,8 +63,8 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         case LIST_TYPE:
-            //if (serializeList(object, &body, &bodySize))
-            //    return 1;
+            if (serializeList(object, &body, &bodySize))
+                return 1;
             break;
 
         case TUPLE_TYPE:
@@ -132,7 +132,7 @@ PyObject *deserialize(UserBuffer *buf) {
             return deserializeUnicode(buf, type, size);
 
         case LIST_TYPE:
-            break;
+            return deserializeList(buf, type, size);
 
         case TUPLE_TYPE:
             return deserializeTuple(buf, type, size);
