@@ -129,25 +129,39 @@ PyObject *deserializeSet(UserBuffer *buf, unsigned char type, unsigned long long
  * Outputs: A Python Set, or NULL if an error occurs.
  */
 
-    PyObject *set;
-    PyObject *item;
+    PyObject *tuple, // We will construct our set by first constructing a tuple of objects
+             *set = NULL,
+             *item;
     unsigned long long numItems,
                        i;
 
+    // Get the number of items in our iterable
     if (readSizeHeader(buf, &numItems)) {
         return NULL;
     }
 
-    if ((set = PySet_New(NULL)) == NULL) {
+    // Construct a tuple of the serialized objects
+    if ((tuple = PyTuple_New(numItems)) == NULL) {
         return NULL;
     }
-
     for (i = 0; i < numItems; i++) {
         if ((item = deserialize(buf)) == NULL) {
-            Py_DECREF(set);
+            Py_DECREF(tuple);
             return NULL;
         }
-        PySet_Add(set, item);
+        PyTuple_SET_ITEM(tuple, i, item);
+    }
+
+    // Construct our set or frozenset
+    if (type == SET_TYPE) {
+        set = PySet_New(tuple);
+    } else if (type == FROZEN_SET_TYPE) {
+        set = PyFrozenSet_New(tuple);
+    }
+
+    if (set == NULL) {
+        Py_DECREF(tuple);
+        return NULL;
     }
 
     return set;

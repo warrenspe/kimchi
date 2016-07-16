@@ -57,7 +57,7 @@ unsigned char getType(PyObject *obj) {
     } else if (obj == Py_None) {
         return NONE_TYPE;
 
-    } else if (PySet_Check(obj)) {
+    } else if (PyAnySet_CheckExact(obj)) {
         if (PyFrozenSet_CheckExact(obj))
             return FROZEN_SET_TYPE;
         return SET_TYPE;
