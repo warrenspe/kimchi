@@ -19,8 +19,31 @@
 #include "headers/pump.h"
 
 // Function Prototypes
+static void _freeSerializeSetBuffers(char **, unsigned long long *, unsigned long long, PyObject *);
 int serializeSet(PyObject *, char **, unsigned long long *);
 PyObject *deserializeSet(UserBuffer *, unsigned char, unsigned long long);
+
+
+static void _freeSerializeSetBuffers(char **serializations, unsigned long long *sizes,
+                                     unsigned long long numItems, PyObject *iter) {
+/* Function which frees several buffers used when serializing a Python Set.
+ *
+ * Inputs: serializations - A pointer to a block of memory used to hold pointers to buffers recording each item's
+ *                          serializations.
+ *         sizes          - A pointer to an block of memory used to record the sizes of each item's serialization.
+ *         numItems       - A value containing the number of items in serializations to free.
+ *         iter           - A pointer to a PyObject iterator over our set.
+ */
+
+    unsigned long long i;
+
+    for (i = 0; i < numItems; i++) {
+        free(*(serializations + i));
+    }
+    free(serializations);
+    free(sizes);
+    Py_DECREF(iter);
+}
 
 
 int serializeSet(PyObject *set, char **buffer, unsigned long long *size) {
@@ -32,6 +55,65 @@ int serializeSet(PyObject *set, char **buffer, unsigned long long *size) {
  *
  * Outputs: 0 on success. > 0 on failure.
  */
+
+    PyObject *iter = NULL,
+             *item;
+    unsigned long long numItems = PySet_GET_SIZE(set),
+                       bufferOffset,
+                       i = 0,
+                       *sizes = NULL;
+    char **serializations = NULL;
+
+    *size = 0;
+
+    // Get an iterator over the items in the set
+    if ((iter = PyObject_GetIter(set)) == NULL) {
+        return 1;
+    }
+
+    // Create an array of strings containing serializations of the objects in the set
+    if ((serializations = calloc(numItems, sizeof(char *))) == NULL) {
+        _freeSerializeSetBuffers(serializations, sizes, numItems, iter);
+        return 1;
+    }
+
+    // Create an array of sizes of the objects to serialize
+    if ((sizes = calloc(numItems, sizeof(unsigned long long *))) == NULL) {
+        _freeSerializeSetBuffers(serializations, sizes, numItems, iter);
+        return 1;
+    }
+
+    // Serialize each item
+    while ((item = PyIter_Next(iter)) != NULL) {
+        if (serialize(item, (serializations + i), (Py_ssize_t *) (sizes + i))) {
+            _freeSerializeSetBuffers(serializations, sizes, numItems, iter);
+            return 1;
+        }
+
+        *size += *(sizes + i);
+        i += 1;
+    }
+
+    // Add the number of bytes required to create a serialized version of the number of items in the set
+    bufferOffset = numSizeHeaderBytes(numItems);
+    *size += bufferOffset;
+
+    if ((*buffer = malloc(*size)) == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for serialization");
+        _freeSerializeSetBuffers(serializations, sizes, numItems, iter);
+        return 1;
+    }
+
+    // Write the num items to the buffer
+    writeSizeHeader(*buffer, numItems);
+
+    // Write each serialization to buffer
+    for (i = 0; i < numItems; i++) {
+        memcpy((void *) ((*buffer) + bufferOffset), *(serializations + i), *(sizes + i));
+        bufferOffset += *(sizes + i);
+    }
+
+    _freeSerializeSetBuffers(serializations, sizes, numItems, iter);
 
     return 0;
 }
@@ -47,5 +129,26 @@ PyObject *deserializeSet(UserBuffer *buf, unsigned char type, unsigned long long
  * Outputs: A Python Set, or NULL if an error occurs.
  */
 
-    return NULL;
+    PyObject *set;
+    PyObject *item;
+    unsigned long long numItems,
+                       i;
+
+    if (readSizeHeader(buf, &numItems)) {
+        return NULL;
+    }
+
+    if ((set = PySet_New(NULL)) == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; i < numItems; i++) {
+        if ((item = deserialize(buf)) == NULL) {
+            Py_DECREF(set);
+            return NULL;
+        }
+        PySet_Add(set, item);
+    }
+
+    return set;
 }

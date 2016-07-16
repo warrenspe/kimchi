@@ -53,8 +53,8 @@ int serializeList(PyObject *list, char **buffer, unsigned long long *size) {
  */
 
     PyObject *item;
-    char **serializations;
-    unsigned long long *sizes,
+    char **serializations = NULL;
+    unsigned long long *sizes = NULL,
                        bufferOffset,
                        i,
                        numItems;
