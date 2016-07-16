@@ -1,11 +1,7 @@
-optional hash validation
-
 TODO cross platform serializations (especially for unicode; currently assuming that the UNICHR width is always 2
+    * same for floats
 EDIT: perhaps a diff uni flagtype per width?
 
 once we start doing py3 support; see about making the py2 dict serializer more efficient (look at dict_items)
-
-Set Type
-float Type
 
 Py3 support

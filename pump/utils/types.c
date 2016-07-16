@@ -39,6 +39,9 @@ unsigned char getType(PyObject *obj) {
             return NEG_LONG_TYPE;
         return LONG_TYPE;
 
+    } else if (PyFloat_CheckExact(obj)) {
+        return FLOAT_TYPE;
+
     } else if (PyString_Check(obj)) {
         return STRING_TYPE;
 

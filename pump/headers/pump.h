@@ -33,6 +33,7 @@
     #define SET_TYPE 10
     #define FROZEN_SET_TYPE 11
     #define NONE_TYPE 12
+    #define FLOAT_TYPE 13
 
 
     // Standard Library Includes
@@ -60,6 +61,7 @@
     #include "serializers/dict.c"
     #include "serializers/set.c"
     #include "serializers/none.c"
+    #include "serializers/float.c"
 
     // Main C API Include
     #include "headers/serialize.h"

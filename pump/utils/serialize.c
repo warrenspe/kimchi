@@ -52,6 +52,11 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
                 return 1;
             break;
 
+        case FLOAT_TYPE:
+            if (serializeFloat(object, type, &body, &bodySize))
+                return 1;
+            break;
+
         case STRING_TYPE:
             if (serializeString(object, &body, &bodySize))
                 return 1;
@@ -137,6 +142,9 @@ PyObject *deserialize(UserBuffer *buf) {
         case LONG_TYPE:
         case NEG_LONG_TYPE:
             return deserializeLong(buf, type, size);
+
+        case FLOAT_TYPE:
+            return deserializeFloat(buf, type, size);
 
         case STRING_TYPE:
             return deserializeString(buf, type, size);
