@@ -37,7 +37,7 @@ int serializeLong(PyObject *longObj, unsigned char type, char **buffer, unsigned
 
     PyLongObject *pyLong = (PyLongObject *) longObj;
 
-    *size = pyLong->ob_size * sizeof(digit);
+    *size = Py_SIZE(pyLong) * sizeof(digit);
 
     if (type == NEG_LONG_TYPE) {
         *size = -(*size);
@@ -66,7 +66,7 @@ PyObject *deserializeLong(UserBuffer *buf, unsigned char type, unsigned long lon
     PyLongObject *pyLong = _PyLong_New((Py_ssize_t) size / sizeof(digit));
 
     if (type == NEG_LONG_TYPE) {
-        pyLong->ob_size = -pyLong->ob_size;
+        Py_SIZE(pyLong) = -Py_SIZE(pyLong);
     }
 
     if (readBuffer(buf, (unsigned char *) (pyLong->ob_digit), size)) {

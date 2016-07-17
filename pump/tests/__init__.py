@@ -1,13 +1,20 @@
 #!/usr/bin/python
 
 # Standard imports
-import unittest, argparse, sys, os, time, pickle
+import unittest, argparse, sys, os, time, cPickle
 
 sys.path.append('.')
 sys.path.append('..')
 
 # Projet imports
 import pump
+
+# Python 2 & 3 compatibility
+if sys.version_info.major >= 3:
+    if type(__builtins__) == dict:
+        __builtins__['long'] = int
+    else:
+        __builtins__.long = int
 
 # Globals
 TEST_DIR = os.path.split(os.path.dirname(os.path.realpath(__file__)))[-1]
@@ -43,8 +50,8 @@ class PumpTestCase(unittest.TestCase):
         for obj in toTest:
             pumpSerElapsed, pumpDeserElapsed, pumpSerializedSize = self.__test(obj, pump.deflate, pump.inflate)
             if PICKLE_CMP:
-                pickleSerElapsed, pickleDeserElapsed, pickleSerializedSize = self.__test(obj, pickle.dumps, pickle.loads)
-                print "\n".join(("",
+                pickleSerElapsed, pickleDeserElapsed, pickleSerializedSize = self.__test(obj, cPickle.dumps, cPickle.loads)
+                print("\n".join(("",
                     "%s:" % repr(obj)[:125],
                     "Time to serialize:",
                     "    pump: %s" % pumpSerElapsed,
@@ -55,7 +62,7 @@ class PumpTestCase(unittest.TestCase):
                     "Serialization length:",
                     "    pump: %s" % pumpSerializedSize,
                     "    pickle: %s" % pickleSerializedSize
-                ))
+                )))
                       
 
 

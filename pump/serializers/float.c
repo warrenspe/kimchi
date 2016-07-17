@@ -57,7 +57,7 @@ PyObject *deserializeFloat(UserBuffer *buf, unsigned char type, unsigned long lo
  * Outputs: A Python Float, or NULL if an error occurs.
  */
 
-    double val;
+    double val = 0;
 
     readBuffer(buf, (unsigned char *) &val, sizeof(val));
 

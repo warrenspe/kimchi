@@ -12,7 +12,7 @@ class TestSet(tests.PumpTestCase):
             set([1]),
             set([u'\u2208']),
             set([1, 2, 3]),
-            set([-1L]),
+            set([long(-1)]),
             set(range(900000)),
             set([(1, 2), (4, 5), ((6, 7), (8,), tuple())]),
             set((((((((((((((None,),),),),),),),),),),),),))
@@ -29,7 +29,7 @@ class TestSet(tests.PumpTestCase):
             frozenset([1]),
             frozenset([u'\u2208']),
             frozenset([1, 2, 3]),
-            frozenset([-1L]),
+            frozenset([long(-1)]),
             frozenset(range(900000)),
             frozenset([(1, 2), (4, 5), ((6, 7), (8,), tuple())]),
             frozenset((((((((((((((None,),),),),),),),),),),),),))

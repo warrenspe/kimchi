@@ -12,7 +12,7 @@ class TestTuple(tests.PumpTestCase):
             (1,),
             (u'\u2208',),
             (1, 2, 3),
-            (-1L,),
+            (long(-1),),
             tuple(range(900000)),
             ((1, 2), (4, 5), ((6, 7), (8,), tuple())),
             ((((((tuple(),),),),),),),

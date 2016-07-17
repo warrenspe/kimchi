@@ -29,38 +29,51 @@ unsigned char getType(PyObject *obj) {
  *          0 if unable to determine the type of obj.
  */
 
-    if (PyInt_CheckExact(obj)) {
-        if (PyLong_AsLongLong(obj) < 0)
-            return NEG_INT_TYPE;
-        return INT_TYPE;
+    // Python 2 specific types
+    #if PY_MAJOR_VERSION == 2
+        if (PyInt_CheckExact(obj)) {
+            if (PyLong_AsLongLong(obj) < 0)
+                return NEG_INT_TYPE;
+            return INT_TYPE;
+        }
 
-    } else if (PyLong_CheckExact(obj)) {
-        if (((PyLongObject *) obj)->ob_size < 0)
+        if (PyString_Check(obj)) {
+            return STRING_TYPE;
+        }
+
+    #endif
+
+    if (PyLong_CheckExact(obj)) {
+        if (Py_SIZE(obj) < 0)
             return NEG_LONG_TYPE;
         return LONG_TYPE;
+    }
 
-    } else if (PyFloat_CheckExact(obj)) {
+    if (PyFloat_CheckExact(obj)) {
         return FLOAT_TYPE;
+    }
 
-    } else if (PyString_Check(obj)) {
-        return STRING_TYPE;
-
-    } else if (PyUnicode_Check(obj)) {
+    if (PyUnicode_Check(obj)) {
         return UNICODE_TYPE;
+    }
 
-    } else if (PyList_CheckExact(obj)) {
+    if (PyList_CheckExact(obj)) {
         return LIST_TYPE;
+    }
 
-    } else if (PyTuple_CheckExact(obj)) {
+    if (PyTuple_CheckExact(obj)) {
         return TUPLE_TYPE;
+    }
 
-    } else if (PyDict_CheckExact(obj)) {
+    if (PyDict_CheckExact(obj)) {
         return DICT_TYPE;
+    }
 
-    } else if (obj == Py_None) {
+    if (obj == Py_None) {
         return NONE_TYPE;
+    }
 
-    } else if (PyAnySet_CheckExact(obj)) {
+    if (PyAnySet_CheckExact(obj)) {
         if (PyFrozenSet_CheckExact(obj))
             return FROZEN_SET_TYPE;
         return SET_TYPE;

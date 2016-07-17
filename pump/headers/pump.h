@@ -52,9 +52,14 @@
     #undef __SERIALIZE_HEADERS_ONLY
 
     // Serializer Includes
-    #include "serializers/int.c"
+
+    // Python 2 specific serializers
+    #if PY_MAJOR_VERSION == 2
+        #include "serializers/int.c"
+        #include "serializers/string.c"
+    #endif
+
     #include "serializers/long.c"
-    #include "serializers/string.c"
     #include "serializers/unicode.c"
     #include "serializers/tuple.c"
     #include "serializers/list.c"

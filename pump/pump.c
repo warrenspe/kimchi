@@ -40,7 +40,7 @@ PyObject *deflate(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    obj = PyString_FromStringAndSize(outputBuffer, (Py_ssize_t) size);
+    obj = PyBytes_FromStringAndSize(outputBuffer, (Py_ssize_t) size);
     free(outputBuffer);
 
     return obj;
@@ -80,6 +80,25 @@ static PyMethodDef pumpMethods[] = {
     {NULL, NULL, 0, NULL}   /* sentinel */
 };
 
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef pumpDef = {
+        PyModuleDef_HEAD_INIT,
+        "pump",
+        "Provides serialization capabilities for most built in objects",
+        -1,
+        pumpMethods,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+};
+
+PyMODINIT_FUNC PyInit_pump(void) {
+    return PyModule_Create(&pumpDef);
+}
+
+#else
 void initpump(void) {
     Py_InitModule("pump", pumpMethods);
 }
+#endif
