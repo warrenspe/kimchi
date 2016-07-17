@@ -25,15 +25,16 @@
     #define NEG_INT_TYPE 2
     #define LONG_TYPE 3
     #define NEG_LONG_TYPE 4
-    #define STRING_TYPE 5
+    #define BYTES_TYPE 5
     #define UNICODE_TYPE 6
-    #define LIST_TYPE 7
-    #define TUPLE_TYPE 8
-    #define DICT_TYPE 9
-    #define SET_TYPE 10
-    #define FROZEN_SET_TYPE 11
-    #define NONE_TYPE 12
-    #define FLOAT_TYPE 13
+    #define ENCODED_UNICODE_TYPE 7
+    #define LIST_TYPE 8
+    #define TUPLE_TYPE 9
+    #define DICT_TYPE 10
+    #define SET_TYPE 11
+    #define FROZEN_SET_TYPE 12
+    #define NONE_TYPE 13
+    #define FLOAT_TYPE 14
 
 
     // Standard Library Includes
@@ -56,10 +57,10 @@
     // Python 2 specific serializers
     #if PY_MAJOR_VERSION == 2
         #include "serializers/int.c"
-        #include "serializers/string.c"
     #endif
 
     #include "serializers/long.c"
+    #include "serializers/bytes.c"
     #include "serializers/unicode.c"
     #include "serializers/tuple.c"
     #include "serializers/list.c"

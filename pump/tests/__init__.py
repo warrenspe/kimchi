@@ -1,7 +1,11 @@
 #!/usr/bin/python
 
 # Standard imports
-import unittest, argparse, sys, os, time, cPickle
+import unittest, argparse, sys, os, time
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 sys.path.append('.')
 sys.path.append('..')
@@ -50,7 +54,7 @@ class PumpTestCase(unittest.TestCase):
         for obj in toTest:
             pumpSerElapsed, pumpDeserElapsed, pumpSerializedSize = self.__test(obj, pump.deflate, pump.inflate)
             if PICKLE_CMP:
-                pickleSerElapsed, pickleDeserElapsed, pickleSerializedSize = self.__test(obj, cPickle.dumps, cPickle.loads)
+                pickleSerElapsed, pickleDeserElapsed, pickleSerializedSize = self.__test(obj, pickle.dumps, pickle.loads)
                 print("\n".join(("",
                     "%s:" % repr(obj)[:125],
                     "Time to serialize:",

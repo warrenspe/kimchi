@@ -37,10 +37,6 @@ unsigned char getType(PyObject *obj) {
             return INT_TYPE;
         }
 
-        if (PyString_Check(obj)) {
-            return STRING_TYPE;
-        }
-
     #endif
 
     if (PyLong_CheckExact(obj)) {
@@ -51,6 +47,10 @@ unsigned char getType(PyObject *obj) {
 
     if (PyFloat_CheckExact(obj)) {
         return FLOAT_TYPE;
+    }
+
+    if (PyBytes_Check(obj)) {
+        return BYTES_TYPE;
     }
 
     if (PyUnicode_Check(obj)) {

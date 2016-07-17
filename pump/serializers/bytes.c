@@ -1,5 +1,5 @@
 /*
- *  string.c: A file containing functions used by pump.c to serialize strings.
+ *  bytes.c: A file containing functions used by pump.c to serialize `bytes` objects and Python2 strings.
  *  Copyright (C) 2016 Warren Spencer warrenspencer27@gmail.com
 
  *  This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,15 @@
 #include "headers/pump.h"
 
 // Function prototypes
-int serializeString(PyObject *, char **, unsigned long long *);
-PyObject *deserializeString(UserBuffer *, unsigned char, unsigned long long);
+int serializeBytes(PyObject *, char **, unsigned long long *);
+PyObject *deserializeBytes(UserBuffer *, unsigned char, unsigned long long);
 
 
-int serializeString(PyObject *str, char **buffer, unsigned long long *size) {
-/* Function which serializes a Python String to a string.
+int serializeBytes(PyObject *bytes, char **buffer, unsigned long long *size) {
+/* Function which serializes a Python2 String or bytes object to a string.
  *
- * Inputs: str    - The PyStr to serialize.
- *         buffer - A pointer to a string to initialize and serialize str to.
+ * Inputs: bytes  - The Py2Str or bytes to serialize.
+ *         buffer - A pointer to a string to initialize and serialize bytes to.
  *         size   - A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
  * Outputs: 0 on success. > 0 on failure.
@@ -35,8 +35,8 @@ int serializeString(PyObject *str, char **buffer, unsigned long long *size) {
 
     char *tmpBuffer;
 
-    // Retrieve the internal string from the PyStr
-    if (PyString_AsStringAndSize(str, &tmpBuffer, (Py_ssize_t *) size) == -1) {
+    // Retrieve the internal string from the Py2Str/bytes
+    if (PyBytes_AsStringAndSize(bytes, &tmpBuffer, (Py_ssize_t *) size) == -1) {
         return 1;
     }
 
@@ -51,18 +51,18 @@ int serializeString(PyObject *str, char **buffer, unsigned long long *size) {
     return 0;
 }
 
-PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long long size) {
-/* Function which deserializes a string into a PyStr.
+PyObject *deserializeBytes(UserBuffer *buf, unsigned char type, unsigned long long size) {
+/* Function which deserializes a string into a bytes object.
  *
- * Inputs: buf  - A UserBuffer containing the data to convert into a PyStr.
+ * Inputs: buf  - A UserBuffer containing the data to convert into a bytes object.
  *         type - A char containing the type of the object we're deserializing.
- *         size - The number of bytes to use in constructing the PyStr.
+ *         size - The number of bytes to use in constructing the bytes object.
  *
- * Outputs: A Python String object, or NULL if an error occurs.
+ * Outputs: A bytes object, or NULL if an error occurs.
  */
 
     unsigned char *bytes;
-    PyObject *pyStr;
+    PyObject *pyBytes;
 
     if ((bytes = malloc(size)) == NULL) {
         PyErr_SetString(PyExc_MemoryError, "Unable to acquire memory for deserialization");
@@ -74,11 +74,11 @@ PyObject *deserializeString(UserBuffer *buf, unsigned char type, unsigned long l
         return NULL;
     }
 
-    pyStr = PyString_FromStringAndSize((char *) bytes, (Py_ssize_t) size);
+    pyBytes = PyBytes_FromStringAndSize((char *) bytes, (Py_ssize_t) size);
 
-    if (pyStr == NULL) {
+    if (pyBytes == NULL) {
         free(bytes);
     }
 
-    return pyStr;
+    return pyBytes;
 }

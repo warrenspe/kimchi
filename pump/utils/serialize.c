@@ -47,11 +47,6 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             if (serializeInt(object, type, &body, &bodySize))
                 return 1;
             break;
-
-        case STRING_TYPE:
-            if (serializeString(object, &body, &bodySize))
-                return 1;
-            break;
     #endif
 
         case LONG_TYPE:
@@ -65,8 +60,13 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
                 return 1;
             break;
 
+        case BYTES_TYPE:
+            if (serializeBytes(object, &body, &bodySize))
+                return 1;
+            break;
+
         case UNICODE_TYPE:
-            if (serializeUnicode(object, &body, &bodySize))
+            if (serializeUnicode(object, &type, &body, &bodySize))
                 return 1;
             break;
 
@@ -143,9 +143,6 @@ PyObject *deserialize(UserBuffer *buf) {
         case INT_TYPE:
         case NEG_INT_TYPE:
             return deserializeInt(buf, type, size);
-
-        case STRING_TYPE:
-            return deserializeString(buf, type, size);
     #endif
 
         case LONG_TYPE:
@@ -155,8 +152,13 @@ PyObject *deserialize(UserBuffer *buf) {
         case FLOAT_TYPE:
             return deserializeFloat(buf, type, size);
 
+        case ENCODED_UNICODE_TYPE:
+            return deserializeEncodedUnicode(buf, type, size);
         case UNICODE_TYPE:
             return deserializeUnicode(buf, type, size);
+
+        case BYTES_TYPE:
+            return deserializeBytes(buf, type, size);
 
         case LIST_TYPE:
             return deserializeList(buf, type, size);
