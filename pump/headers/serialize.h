@@ -15,20 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __SERIALIZE_H
+// Function Prototypes
+int serialize(PyObject *, char **, Py_ssize_t *);
+PyObject *deserialize(UserBuffer *);
 
-    // Function Prototypes
-    int serialize(PyObject *, char **, Py_ssize_t *);
-    PyObject *deserialize(UserBuffer *);
-
-    // Includes
-
-    // The first time we are included, we just want the function definitions.
-    // This allows for serializers to use our serialize/deserialize functions.
-    // The next time we are included include the definitions for these functions
-    #ifndef __SERIALIZE_HEADERS_ONLY
-        #define __SERIALIZE_H 1
-        #include "utils/serialize.c"
-    #endif
-
-#endif
+// Note, we do not include utils/serialize.c here because it requires all of our serializers to be defined, while
+// this file is included before them as they could in turn require access to the serialize and deserialize functions
+// Thusly, utils/serialize.c is included in headers/pump.h

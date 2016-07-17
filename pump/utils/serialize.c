@@ -66,7 +66,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         case UNICODE_TYPE:
-            if (serializeUnicode(object, &type, &body, &bodySize))
+            if (serializeUnicode(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -152,8 +152,6 @@ PyObject *deserialize(UserBuffer *buf) {
         case FLOAT_TYPE:
             return deserializeFloat(buf, type, size);
 
-        case ENCODED_UNICODE_TYPE:
-            return deserializeEncodedUnicode(buf, type, size);
         case UNICODE_TYPE:
             return deserializeUnicode(buf, type, size);
 

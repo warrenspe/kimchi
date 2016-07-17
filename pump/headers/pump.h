@@ -27,14 +27,13 @@
     #define NEG_LONG_TYPE 4
     #define BYTES_TYPE 5
     #define UNICODE_TYPE 6
-    #define ENCODED_UNICODE_TYPE 7
-    #define LIST_TYPE 8
-    #define TUPLE_TYPE 9
-    #define DICT_TYPE 10
-    #define SET_TYPE 11
-    #define FROZEN_SET_TYPE 12
-    #define NONE_TYPE 13
-    #define FLOAT_TYPE 14
+    #define LIST_TYPE 7
+    #define TUPLE_TYPE 8
+    #define DICT_TYPE 9
+    #define SET_TYPE 10
+    #define FROZEN_SET_TYPE 11
+    #define NONE_TYPE 12
+    #define FLOAT_TYPE 13
 
 
     // Standard Library Includes
@@ -47,10 +46,8 @@
     #include "headers/buffer.h"
     #include "headers/headers.h"
     #include "headers/types.h"
-    // Include the definition of serialize and deserialize for use in serializers
-    #define __SERIALIZE_HEADERS_ONLY 1
+    // Include the prototype of serialize and deserialize for use in serializers but not the actual function definitions
     #include "headers/serialize.h"
-    #undef __SERIALIZE_HEADERS_ONLY
 
     // Serializer Includes
 
@@ -69,8 +66,9 @@
     #include "serializers/none.c"
     #include "serializers/float.c"
 
-    // Main C API Include
-    #include "headers/serialize.h"
+    // Include the definitions of serialize and deserialize. Done seperately as this requires the serializers
+    // above to be defined, which in turn can use the functions this file offers
+    #include "utils/serialize.c"
 
 
     // pump.c Function Prototypes
