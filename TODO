@@ -1,5 +1,4 @@
-TODO cross platform serializations (especially for unicode; currently assuming that the UNICHR width is always 2
-    * same for floats
-EDIT: perhaps a diff uni flagtype per width?
+TODO cross platform serializations for floats & longs (endianness)
 
-once we start doing py3 support; see about making the py2 dict serializer more efficient (look at dict_items)
+see about making the dict serializer more efficient (look at dict_items)
+ Use the smaller float type if we don't need the full amount of precision of double
