@@ -1,19 +1,18 @@
 # pump
 Python2 & 3 C Extension for serializing certain built-in Python types
 
-`pump` offers functionality very similar to the `pickle` builtin library.  Unlike `pickle`, pump cannot serialize generic python objects / classes.  `pump` only serialize built in Python objects, in particular:
-
+`pump` offers functionality very similar to the default `pickle` module.  Unlike `pickle` though, `pump` cannot serialize generic Python objects and classes.  `pump` can only serialize built in Python objects - in particular:
 * Integers (only in Python2)
 * Floats
 * Longs
 * Strings (Bytes in Python3)
-* Unicode (Strings in Python3)
+* Unicodes (Strings in Python3)
 * Lists
 * Tuples
 * Sets
 * Frozensets
 * Dictionaries
-* None
+* None objects
 
 However, for most objects `pump` performs serialization faster than the built-in `pickle` library, and more importantly, produces more compact objects.
 
@@ -41,3 +40,6 @@ Pump has two single argument functions, `inflate` and `deflate`.  `deflate` is u
 >>> pump.inflate(serialization)
 [1, 2, 3, ('4', '5', '6')]
 ```
+
+## Speed and size comparisons to the built-in pickle
+Note that all tests were done in Python2, comparing to its cPickle module
