@@ -43,3 +43,34 @@ Pump has two single argument functions, `inflate` and `deflate`.  `deflate` is u
 
 ## Speed and size comparisons to the built-in pickle
 Note that all tests were done in Python2, comparing to its cPickle module
+
+### Integers
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6OTZSeDAyOWxCRms "")
+### Floats
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6aHd1MmFiT3ZjZTA "")
+Note: constant size, might be revisited later
+### Longs
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6SnZoSHg1c29xb00 "")
+### Strings (Bytes in Python3)
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6aEpwZ2hKMVIwSjg "")
+Note that the final string was not included in the size comparison, as the size skews the axis of the graph.  The serialized sizes however are:
+pump: 1003, pickle: 1008
+### Unicodes (Strings in Python3)
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6dTRZd0lGS0V2Qkk "")
+
+Note that the final unicode string was not included in the size comparison, as the size skews the axis of the graph.  The serialized sizes are:
+pump: 1003, pickle: 1006
+### None objects
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6NGJCclhpSzdobTQ "")
+
+***
+**Note**: Speed and size for the following types is largely influenced by the items within them, to give the best results they have been filled with the data type which gives the most similar serialization times and sizes between pickle and pump, string/bytes objects.  
+***
+### Dictionaries
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6YUNEck5ubGt4WHM "")
+### Lists
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6NmJiOUNleElZUVE "")
+### Tuples
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6NFdLNTdkTFlZVzA "")
+### Sets
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6LW5kUVU1eGIzODQ "")
