@@ -53,7 +53,7 @@ Note: constant size, might be revisited later
 ![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6SnZoSHg1c29xb00 "")
 ### Strings (Bytes in Python3)
 ![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6aEpwZ2hKMVIwSjg "")
-Note that the final string was not included in the size comparison, as the size skews the axis of the graph.  The serialized sizes however are:
+Note that the final string was not included in the size comparison, as the size skews the axis of the graph.  The serialized sizes are:
 pump: 1003, pickle: 1008
 ### Unicodes (Strings in Python3)
 ![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6dTRZd0lGS0V2Qkk "")
