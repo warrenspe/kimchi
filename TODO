@@ -1,4 +1,7 @@
 TODO cross platform serializations for floats & longs (endianness)
 
 see about making the dict serializer more efficient (look at dict_items)
- Use the smaller float type if we don't need the full amount of precision of double
+
+Use the smaller float type if we don't need the full amount of precision of double
+
+See if using an iterator over list/tuple speeds them up much
