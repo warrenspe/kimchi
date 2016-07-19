@@ -37,10 +37,10 @@
 
 
     // Standard Library Includes
+    #include <Python.h>
     #include <math.h>
     #include <string.h>
     #include <stdlib.h>
-    #include <Python.h>
 
     // Util Includes
     #include "headers/buffer.h"
@@ -72,8 +72,8 @@
 
 
     // pump.c Function Prototypes
-    PyObject *deflate(PyObject *, PyObject *);
-    PyObject *inflate(PyObject *, PyObject *);
+    static PyObject *deflate(PyObject *, PyObject *);
+    static PyObject *inflate(PyObject *, PyObject *);
     void initpump(void);
 
 #endif

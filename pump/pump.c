@@ -53,7 +53,7 @@
 
 #include "headers/pump.h"
 
-PyObject *deflate(PyObject *self, PyObject *args) {
+static PyObject *deflate(PyObject *self, PyObject *args) {
 /* API function which serializes a python object.
  *
  * Inputs: self - Unused. The required `self` parameter of any python-visible function.
@@ -80,7 +80,7 @@ PyObject *deflate(PyObject *self, PyObject *args) {
     return obj;
 }
 
-PyObject *inflate(PyObject *self, PyObject *args) {
+static PyObject *inflate(PyObject *self, PyObject *args) {
 /* API function which deserializes a python object.
  *
  * Inputs: self - Unused. The required `self` parameter of any python-visible function.

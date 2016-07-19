@@ -51,7 +51,9 @@ static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, un
  *         size        - The number of bytes we need to serialize into buffer.
  */
 
-    for (int i = 0; i < size; i++) {
+    int i;
+
+    for (i = 0; i < size; i++) {
         *(buffer + i) = toSerialize & 255;
         toSerialize >>= 8;
     }
@@ -106,8 +108,9 @@ PyObject *deserializeInt(UserBuffer *buf, unsigned char type, unsigned long long
     unsigned long long val = 0;
     unsigned int shift = 0;
     unsigned char byte;
+    unsigned long long i;
 
-    for (unsigned long long i = 0; i < size; i++) {
+    for (i = 0; i < size; i++) {
         if (readBuffer(buf, &byte, 1)) {
             return NULL;
         }

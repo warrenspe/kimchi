@@ -3,7 +3,7 @@ import distutils.core
 
 EXTRA_COMPILE_ARGS = None
 if "DEBUG" in os.environ:
-    EXTRA_COMPILE_ARGS = ["-O0", "-g"]
+    EXTRA_COMPILE_ARGS = ["-O0", "-pg"]
 
 
 distutils.core.setup(
