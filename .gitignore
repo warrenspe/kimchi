@@ -69,3 +69,6 @@ target/
 #C
 *.o
 *.dll
+
+#PyPi
+.pypirc
