@@ -10,6 +10,7 @@ if "DEBUG" in os.environ:
 distutils.core.setup(
     name="pump",
     version="1.0",
+    py_modules=["__init__"],
     ext_modules=[
         distutils.core.Extension(
             "pump",
