@@ -71,6 +71,9 @@ pump: 1003, pickle: 1006
 ### None objects
 ![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6NGJCclhpSzdobTQ "")
 
+### Boolean objects
+![Alt text](https://drive.google.com/uc?id=0BwLoYm538Nb6eU5sMVhTYW9Oenc "")
+
 ***
 **Note**: Speed and size for the following types is largely influenced by the items within them, to give the best results they have been filled with the data type which gives the most similar serialization times and sizes between pickle and pump, string/bytes objects.  
 ***
