@@ -21,7 +21,7 @@
 // Function Prototypes
 static void _freeSerializeSetBuffers(char **, unsigned long long *, unsigned long long, PyObject *);
 int serializeSet(PyObject *, char **, unsigned long long *);
-PyObject *deserializeSet(UserBuffer *, unsigned char, unsigned long long);
+PyObject *deserializeSet(UserBuffer *, unsigned char);
 
 
 static void _freeSerializeSetBuffers(char **serializations, unsigned long long *sizes,
@@ -119,12 +119,11 @@ int serializeSet(PyObject *set, char **buffer, unsigned long long *size) {
 }
 
 
-PyObject *deserializeSet(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeSet(UserBuffer *buf, unsigned char type) {
 /* Function which deserializes a string into a Python Set.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a Set.
  *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the items of the Set.
  *
  * Outputs: A Python Set, or NULL if an error occurs.
  */

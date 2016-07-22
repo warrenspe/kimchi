@@ -51,7 +51,7 @@ static void _writeBytesToBuffer(unsigned long long toSerialize, char *buffer, un
  *         size        - The number of bytes we need to serialize into buffer.
  */
 
-    int i;
+    unsigned long long i;
 
     for (i = 0; i < size; i++) {
         *(buffer + i) = toSerialize & 255;

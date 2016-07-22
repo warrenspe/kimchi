@@ -74,6 +74,10 @@
     // pump.c Function Prototypes
     static PyObject *deflate(PyObject *, PyObject *);
     static PyObject *inflate(PyObject *, PyObject *);
+    #if PY_MAJOR_VERSION == 2
     void initpump(void);
+    #else
+    PyMODINIT_FUNC PyInit_pump(void);
+    #endif
 
 #endif

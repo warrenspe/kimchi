@@ -56,7 +56,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         case FLOAT_TYPE:
-            if (serializeFloat(object, type, &body, &bodySize))
+            if (serializeFloat(object, &body, &bodySize))
                 return 1;
             break;
 
@@ -92,7 +92,7 @@ int serialize(PyObject *object, char **out, Py_ssize_t *outSize) {
             break;
 
         case NONE_TYPE:
-            if (serializeNone(object, &body, &bodySize))
+            if (serializeNone(&body, &bodySize))
                 return 1;
             break;
 
@@ -150,29 +150,29 @@ PyObject *deserialize(UserBuffer *buf) {
             return deserializeLong(buf, type, size);
 
         case FLOAT_TYPE:
-            return deserializeFloat(buf, type, size);
+            return deserializeFloat(buf);
 
         case UNICODE_TYPE:
-            return deserializeUnicode(buf, type, size);
+            return deserializeUnicode(buf, size);
 
         case BYTES_TYPE:
-            return deserializeBytes(buf, type, size);
+            return deserializeBytes(buf, size);
 
         case LIST_TYPE:
-            return deserializeList(buf, type, size);
+            return deserializeList(buf);
 
         case TUPLE_TYPE:
-            return deserializeTuple(buf, type, size);
+            return deserializeTuple(buf);
 
         case DICT_TYPE:
-            return deserializeDict(buf, type, size);
+            return deserializeDict(buf);
 
         case SET_TYPE:
         case FROZEN_SET_TYPE:
-            return deserializeSet(buf, type, size);
+            return deserializeSet(buf, type);
 
         case NONE_TYPE:
-            return deserializeNone(buf, type, size);
+            return deserializeNone();
     }
 
     PyErr_Format(PyExc_TypeError, "Cannot deserialize object; unrecognized type flag: %d", type);

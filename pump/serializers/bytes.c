@@ -20,7 +20,7 @@
 
 // Function prototypes
 int serializeBytes(PyObject *, char **, unsigned long long *);
-PyObject *deserializeBytes(UserBuffer *, unsigned char, unsigned long long);
+PyObject *deserializeBytes(UserBuffer *, unsigned long long);
 
 
 int serializeBytes(PyObject *bytes, char **buffer, unsigned long long *size) {
@@ -51,11 +51,10 @@ int serializeBytes(PyObject *bytes, char **buffer, unsigned long long *size) {
     return 0;
 }
 
-PyObject *deserializeBytes(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeBytes(UserBuffer *buf, unsigned long long size) {
 /* Function which deserializes a string into a bytes object.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a bytes object.
- *         type - A char containing the type of the object we're deserializing.
  *         size - The number of bytes to use in constructing the bytes object.
  *
  * Outputs: A bytes object, or NULL if an error occurs.

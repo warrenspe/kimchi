@@ -20,7 +20,7 @@
 
 // Function Prototypes
 int serializeDict(PyObject *, char **, unsigned long long *);
-PyObject *deserializeDict(UserBuffer *, unsigned char, unsigned long long);
+PyObject *deserializeDict(UserBuffer *);
 
 
 int serializeDict(PyObject *dict, char **buffer, unsigned long long *size) {
@@ -39,18 +39,16 @@ int serializeDict(PyObject *dict, char **buffer, unsigned long long *size) {
 }
 
 
-PyObject *deserializeDict(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeDict(UserBuffer *buf) {
 /* Function which deserializes a string into a Python Dict.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a Dict.
- *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the items of the Dict.
  *
  * Outputs: A Python Dict, or NULL if an error occurs.
  */
 
     PyObject *dict,
-             *items = deserializeList(buf, LIST_TYPE, size);
+             *items = deserializeList(buf);
 
     if (items == NULL) {
         return NULL;

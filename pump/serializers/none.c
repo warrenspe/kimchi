@@ -19,15 +19,14 @@
 #include "headers/pump.h"
 
 // Function Prototypes
-int serializeNone(PyObject *, char **, unsigned long long *);
-PyObject *deserializeNone(UserBuffer *, unsigned char, unsigned long long);
+int serializeNone(char **, unsigned long long *);
+PyObject *deserializeNone(void);
 
 
-int serializeNone(PyObject *none, char **buffer, unsigned long long *size) {
+int serializeNone(char **buffer, unsigned long long *size) {
 /* Function which serializes a Python None into a string.
  *
- * Inputs: none   - The Python None to serialize.
- *         buffer - A pointer to a string to initialize and serialize `None` to.
+ * Inputs: buffer - A pointer to a string to initialize and serialize `None` to.
  *         size   - A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
  * Outputs: 0.
@@ -39,12 +38,8 @@ int serializeNone(PyObject *none, char **buffer, unsigned long long *size) {
 }
 
 
-PyObject *deserializeNone(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeNone(void) {
 /* Function which deserializes a string into a Python None.
- *
- * Inputs: buf  - A UserBuffer containing the data to convert into a None.
- *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the items of the None.
  *
  * Outputs: A Python None.
  */

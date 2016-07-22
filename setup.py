@@ -1,9 +1,10 @@
 import os
 import distutils.core
 
-EXTRA_COMPILE_ARGS = None
+DEBUG_COMPILE_ARGS = None
 if "DEBUG" in os.environ:
-    EXTRA_COMPILE_ARGS = ["-O0", "-pg"]
+    DEBUG_COMPILE_ARGS = ['-O0', '-g', '-pedantic-errors', '-Wall', '-Wextra', '-Wmissing-prototypes',
+                          '-Wstrict-prototypes', '-Wold-style-definition']
 
 
 distutils.core.setup(
@@ -14,7 +15,7 @@ distutils.core.setup(
             "pump",
             sources = ['pump/pump.c'],
             include_dirs = ['pump', 'pump/utils', 'pump/serializers'],
-            extra_compile_args=EXTRA_COMPILE_ARGS
+            extra_compile_args=DEBUG_COMPILE_ARGS
         )
      ]
 )

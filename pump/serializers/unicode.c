@@ -20,7 +20,7 @@
 
 // Function prototypes
 int serializeUnicode(PyObject *, char **, unsigned long long *);
-PyObject *deserializeUnicode(UserBuffer *, unsigned char, unsigned long long);
+PyObject *deserializeUnicode(UserBuffer *, unsigned long long);
 
 
 int serializeUnicode(PyObject *unicode, char **buffer, unsigned long long *size) {
@@ -46,11 +46,10 @@ int serializeUnicode(PyObject *unicode, char **buffer, unsigned long long *size)
     return serializeBytes(utf8String, buffer, size);
 }
 
-PyObject *deserializeUnicode(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeUnicode(UserBuffer *buf, unsigned long long size) {
 /* Function which deserializes a utf8 encoded bytestring into a PyUnicode.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a PyUnicode.
- *         type - A char containing the type of the object we're deserializing.
  *         size - The number of bytes to use in constructing the PyUnicode.
  *
  * Outputs: A Python Unicode object, or NULL if an error occurs.

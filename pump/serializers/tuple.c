@@ -21,7 +21,7 @@
 // Function Prototypes
 static void _freeSerializeTupleBuffers(char **, unsigned long long *, unsigned long long);
 int serializeTuple(PyObject *, char **, unsigned long long *);
-PyObject *deserializeTuple(UserBuffer *, unsigned char, unsigned long long);
+PyObject *deserializeTuple(UserBuffer *);
 
 
 static void _freeSerializeTupleBuffers(char **serializations, unsigned long long *sizes, unsigned long long numItems){
@@ -110,12 +110,10 @@ int serializeTuple(PyObject *tuple, char **buffer, unsigned long long *size) {
     return 0;
 }
 
-PyObject *deserializeTuple(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeTuple(UserBuffer *buf) {
 /* Function which deserializes a string into a Python Tuple.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a tuple.
- *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the items of the tuple.
  *
  * Outputs: A Python Tuple, or NULL if an error occurs.
  */

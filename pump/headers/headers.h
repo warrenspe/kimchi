@@ -26,6 +26,7 @@
     // Function Prototypes
     unsigned long long numSizeHeaderBytes(unsigned long long);
     void writeSizeHeader(char *, unsigned long long);
+    int readSizeHeader(UserBuffer *, unsigned long long *);
     int constructHeaders(char **, unsigned long long *, Py_ssize_t, unsigned char);
     int parseHeaders(UserBuffer *, unsigned char *, unsigned long long *);
 

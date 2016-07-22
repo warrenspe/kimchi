@@ -19,15 +19,14 @@
 #include "headers/pump.h"
 
 // Function Prototypes
-int serializeFloat(PyObject *, unsigned char, char **, unsigned long long *);
-PyObject *deserializeFloat(UserBuffer *, unsigned char, unsigned long long);
+int serializeFloat(PyObject *, char **, unsigned long long *);
+PyObject *deserializeFloat(UserBuffer *);
 
 
-int serializeFloat(PyObject *floatObj, unsigned char type, char **buffer, unsigned long long *size) {
+int serializeFloat(PyObject *floatObj, char **buffer, unsigned long long *size) {
 /* Function which serializes a Python Float into a string.
  *
  * Inputs: floatObj - The PyFloat to serialize.
- *         type    - A char containing the serialization type of a float object.
  *         buffer  - A pointer to a string to initialize and serialize integer to.
  *         size    - A pointer to a long long to fill with the number of bytes serialized to buffer.
  *
@@ -47,12 +46,10 @@ int serializeFloat(PyObject *floatObj, unsigned char type, char **buffer, unsign
     return 0;
 }
 
-PyObject *deserializeFloat(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeFloat(UserBuffer *buf) {
 /* Function which deserializes a string into a Python Float.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a PyFloat.
- *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the PyFloat.
  *
  * Outputs: A Python Float, or NULL if an error occurs.
  */

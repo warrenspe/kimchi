@@ -21,7 +21,7 @@
 // Function Prototypes
 static void _freeSerializeListBuffers(char **, unsigned long long *, unsigned long long);
 int serializeList(PyObject *, char **, unsigned long long *);
-PyObject *deserializeList(UserBuffer *, unsigned char, unsigned long long);
+PyObject *deserializeList(UserBuffer *);
 
 
 static void _freeSerializeListBuffers(char **serializations, unsigned long long *sizes, unsigned long long numItems) {
@@ -109,12 +109,10 @@ int serializeList(PyObject *list, char **buffer, unsigned long long *size) {
     return 0;
 }
 
-PyObject *deserializeList(UserBuffer *buf, unsigned char type, unsigned long long size) {
+PyObject *deserializeList(UserBuffer *buf) {
 /* Function which deserializes a string into a Python List.
  *
  * Inputs: buf  - A UserBuffer containing the data to convert into a list.
- *         type - A char containing the type of object we're deserializing.
- *         size - The number of bytes to use in constructing the items of the list.
  *
  * Outputs: A Python List, or NULL if an error occurs.
  */

@@ -30,7 +30,7 @@ unsigned long long numSizeHeaderBytes(unsigned long long size) {
  *          or 0 if the size is greater than can be fit into an unsigned long long.
  */
 
-    long long upper = 128,
+    unsigned long long upper = 128,
               length = 1;
 
     while (upper < size) {
