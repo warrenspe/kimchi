@@ -19,6 +19,14 @@ However, for most objects `pump` performs serialization faster than the built-in
 ## Usage
 Pump has two single argument functions, `inflate` and `deflate`.  `deflate` is used to create serializations of objects, and `inflate` is used to recreate the original object given its serialization.
 
+## Installation
+#### Using git
+```
+$ git clone https://github.com/warrenspe/pump.git
+$ cd pump
+$ sudo python3 setup.py install
+```
+
 ## Examples
 ```
 >>> import pump
