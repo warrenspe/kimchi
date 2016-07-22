@@ -73,6 +73,12 @@ unsigned char getType(PyObject *obj) {
         return NONE_TYPE;
     }
 
+    if (PyBool_Check(obj)) {
+        if (Py_True == obj)
+            return BOOL_TRUE_TYPE;
+        return BOOL_FALSE_TYPE;
+    }
+
     if (PyAnySet_CheckExact(obj)) {
         if (PyFrozenSet_CheckExact(obj))
             return FROZEN_SET_TYPE;

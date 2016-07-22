@@ -34,6 +34,8 @@
     #define FROZEN_SET_TYPE 11
     #define NONE_TYPE 12
     #define FLOAT_TYPE 13
+    #define BOOL_TRUE_TYPE 14
+    #define BOOL_FALSE_TYPE 15
 
 
     // Standard Library Includes
@@ -64,6 +66,7 @@
     #include "serializers/dict.c"
     #include "serializers/set.c"
     #include "serializers/none.c"
+    #include "serializers/bool.c"
     #include "serializers/float.c"
 
     // Include the definitions of serialize and deserialize. Done seperately as this requires the serializers
