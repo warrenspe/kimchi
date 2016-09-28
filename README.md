@@ -13,6 +13,7 @@ Python2 & 3 C Extension for serializing certain built-in Python types
 * Frozensets
 * Dictionaries
 * None objects
+* Booleans
 
 However, for most objects `pump` performs serialization faster than the built-in `pickle` library, and more importantly, produces more compact objects.
 
