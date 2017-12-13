@@ -2,26 +2,36 @@ import os
 import distutils.core
 
 DEBUG_COMPILE_ARGS = None
-VERSION = "2.0.1"
-NAME = "kimchi"
-
 if "DEBUG" in os.environ:
     DEBUG_COMPILE_ARGS = ['-O0', '-g', '-pedantic-errors', '-Wall', '-Wextra', '-Wmissing-prototypes',
                           '-Wstrict-prototypes', '-Wold-style-definition']
+
+NAME = "kimchi"
+VERSION = "2.0.2"
+
+AUTHOR = "Warren Spencer"
+EMAIL = "warrenspencer27@gmail.com"
+URL = "https://github.com/warrenspe/%s" % NAME
+LICENSE = "https://opensource.org/licenses/MIT"
+
+PLATFORMS = ["Linux", "Windows"]
+DESCRIPTION = "Package for serializing built in python objects"
+KEYWORDS = ["filestore", "file", "storage", "db", "kimchi"]
+
 
 
 distutils.core.setup(
     name=NAME,
     version=VERSION,
-    description="A built-in object serialization utility.",
-    author="Warren Spencer",
-    author_email="warrenspencer27@gmail.com",
-    url="https://github.com/warrenspe/%s" % NAME,
-    download_url="https://github.com/warrenspe/%s/tarball/%s" % (NAME, VERSION),
-    keywords=['serialize', 'pickle'],
+    description=DESCRIPTION,
+    author=AUTHOR,
+    author_email=EMAIL,
+    url=URL,
+    download_url="%s/tarball/%s" % (URL, VERSION),
+    keywords=KEYWORDS,
     classifiers=[],
-    license="https://www.gnu.org/licenses/gpl-3.0.html",
-    platforms=["Linux", "Windows"],
+    license=LICENSE,
+    platforms=PLATFORMS,
     ext_modules=[
         distutils.core.Extension(
             NAME,
