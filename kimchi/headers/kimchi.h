@@ -40,6 +40,7 @@
 
     // Standard Library Includes
     #include <Python.h>
+    #include "structmember.h"
     #include <math.h>
     #include <string.h>
     #include <stdlib.h>
@@ -48,6 +49,7 @@
     #include "headers/buffer.h"
     #include "headers/headers.h"
     #include "headers/types.h"
+    #include "headers/serializable_class_base_type.h"
     // Include the prototype of serialize and deserialize for use in serializers but not the actual function definitions
     #include "headers/serialize.h"
 

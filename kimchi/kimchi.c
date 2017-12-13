@@ -53,6 +53,19 @@
 
 #include "headers/kimchi.h"
 
+static void initTypes(PyObject *module) {
+/* Initialize types on this module.
+ *
+ * Inputs: module - The module object we will attach the types to.
+ */
+
+    if (PyType_Ready(&SerializableType) < 0)
+        return;
+
+    Py_INCREF(&SerializableType);
+    PyModule_AddObject(module, "Serializable", (PyObject *)&SerializableType);
+}
+
 static PyObject *dumps(PyObject *self, PyObject *args) {
 /* API function which serializes a python object.
  *
@@ -115,24 +128,32 @@ static PyMethodDef kimchiMethods[] = {
 };
 
 #if PY_MAJOR_VERSION >= 3
-static struct PyModuleDef kimchiDef = {
-        PyModuleDef_HEAD_INIT,
-        "kimchi",
-        "Provides serialization capabilities for most built in objects",
-        -1,
-        kimchiMethods,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-};
+    static struct PyModuleDef kimchiDef = {
+            PyModuleDef_HEAD_INIT,
+            "kimchi",
+            "Provides serialization capabilities for most built in objects.",
+            -1,
+            kimchiMethods,
+            NULL,
+            NULL,
+            NULL,
+            NULL
+    };
 
-PyMODINIT_FUNC PyInit_kimchi(void) {
-    return PyModule_Create(&kimchiDef);
-}
+    PyMODINIT_FUNC PyInit_kimchi(void) {
+        PyObject *module = PyModule_Create(&kimchiDef);
+        initTypes(module);
+        return module;
+    }
 
 #else
-void initkimchi(void) {
-    Py_InitModule("kimchi", kimchiMethods);
-}
+    void initkimchi(void) {
+        PyObject *module = Py_InitModule3(
+            "kimchi",
+            kimchiMethods,
+            "Provides serialization capabilities for most built in objects."
+        );
+        initTypes(module);
+    }
+
 #endif
