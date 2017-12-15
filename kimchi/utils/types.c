@@ -91,6 +91,10 @@ unsigned char getType(PyObject *obj) {
         return SET_TYPE;
     }
 
+    if (PyObject_IsInstance(obj, &SerializableType)) {
+        return INSTANCE_TYPE;
+    }
+
     PyErr_Format(PyExc_TypeError, "Unknown object type \"%.400s\"", Py_TYPE(obj)->tp_name);
     return 0;
 }

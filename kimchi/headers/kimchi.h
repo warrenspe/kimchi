@@ -43,6 +43,7 @@
     #define FLOAT_TYPE 13
     #define BOOL_TRUE_TYPE 14
     #define BOOL_FALSE_TYPE 15
+    #define INSTANCE_TYPE 16
 
 
     // Standard Library Includes
