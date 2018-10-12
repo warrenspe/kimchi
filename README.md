@@ -1,4 +1,4 @@
-# kimchi (previously pump)
+# kimchi
 Python2 & 3 C Extension for serializing certain built-in Python types
 
 `kimchi` offers functionality very similar to the default `pickle` module.  Unlike `pickle` though, `kimchi` cannot serialize generic Python objects and classes.  `kimchi` can only serialize built in Python objects - in particular:
